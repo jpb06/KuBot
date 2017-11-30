@@ -57,3 +57,5 @@ typings/
 # dotenv environment variables file
 .env
 
+conf/private.config.local.js
+.vscode/
