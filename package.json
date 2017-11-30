@@ -1,0 +1,27 @@
+{
+    "name": "kubot",
+    "version": "1.0.0",
+    "description": "kuBot does stuffs",
+    "main": "bot.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node bot.js"
+    },
+    "engines": {
+        "node": "8.4.x"
+    },
+    "author": "jpb06",
+    "license": "ISC",
+    "dependencies": {
+        "discord.js": "^11.2.1"
+    },
+    "devDependencies": {},
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/jpb06/KuBot.git"
+    },
+    "bugs": {
+        "url": "https://github.com/jpb06/KuBot/issues"
+    },
+    "homepage": "https://github.com/jpb06/KuBot#readme"
+}
