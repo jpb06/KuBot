@@ -3,21 +3,11 @@ const client = new Discord.Client({
     disableEveryone: true
 });
 
-let apiKey = '';
-let local = false;
-
-try {
-    // case dev local
-    apiKey = require('./conf/private.config.local.js').env.apiKey;
-    local = true;
-} catch (ex) {
-    // case deploy
-    apiKey = process.env.apiKey;
-}
-
+const privateSettings = require('./conf/private.settings.js').initialize();
 const botSettings = require('./conf/bot.settings.json');
-
 const inviteLink = require('./business/util/invitelink.helper.js');
+
+const discoAuthRequest = require('./business/requests/discogc.authentication.js');
 
 /* ----------------------------------------------------------------------------------------------- */
 client.on('ready', async () => {
@@ -33,6 +23,8 @@ client.on('ready', async () => {
     // }
 
     //inviteLink.generate(client);
+
+    discoAuthRequest.send(privateSettings.discogcAuthPostData);
 });
 /* ----------------------------------------------------------------------------------------------- */
 client.on('guildCreate', guild => {
@@ -60,4 +52,4 @@ client.on('message', async message => {
     }
 });
 /* ----------------------------------------------------------------------------------------------- */
-client.login(apiKey);
+client.login(privateSettings.apiKey);
