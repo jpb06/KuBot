@@ -4,27 +4,23 @@ const client = new Discord.Client({
 });
 
 let apiKey = '';
-let discoGCAuthPostData = '';
+let discogcAuthPostData = '';
 let local = false;
 
 try {
     // case dev local
     let privateSettings = require('./conf/private.config.local.js')
     apiKey = privateSettings.env.apiKey;
-    discoGCAuthPostData = privateSettings.env.discoGCAuthPostData;
+    discogcAuthPostData = privateSettings.env.discogcAuthPostData;
     local = true;
 } catch (ex) {
     // case deploy
     apiKey = process.env.apiKey;
-    discoGCAuthPostData = process.env.discoGCAuthPostData;
+    discogcAuthPostData = process.env.discogcAuthPostData;
 }
 
 const botSettings = require('./conf/bot.settings.json');
-
 const inviteLink = require('./business/util/invitelink.helper.js');
-const cookiesHelper = require('./business/util/cookies.helper.js');
-
-const https = require("https");
 
 /* ----------------------------------------------------------------------------------------------- */
 client.on('ready', async () => {
@@ -41,65 +37,6 @@ client.on('ready', async () => {
 
     //inviteLink.generate(client);
 
-    // let c = ['mybb[lastvisit]=xxx; expires=Fri, 21-Dec-2018 09:07:04 GMT; path=/forums/; domain=.discoverygc.com; Secure',
-    //     'mybb[lastactive]=xxx; expires=Fri, 21-Dec-2018 09:07:04 GMT; path=/forums/; domain=.discoverygc.com; Secure',
-    //     'sid=xxx; path=/forums/; domain=.discoverygc.com; HttpOnly; Secure',
-    //     'loginattempts=xxx; expires=Fri, 21-Dec-2018 09:07:04 GMT; path=/forums/; domain=.discoverygc.com; Secure',
-    //     'sid=xxx; path=/forums/; domain=.discoverygc.com; HttpOnly; Secure',
-    //     'mybbuser=xxx; expires=Fri, 21-Dec-2018 09:07:04 GMT; path=/forums/; domain=.discoverygc.com; HttpOnly; Secure'];
-    // let cookies = cookiesHelper.parse(c);
-    // // console.log(c['sid']);
-    // // console.log(c['mybb[lastvisit]']);
-    // console.log(cookies.join(';'));
-
-    const connectionRequestOptions = {
-        hostname: 'discoverygc.com',
-        port: 443,
-        path: '/forums/member.php',
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': discoGCAuthPostData.length
-        }
-    };
-
-    const connectionRequest = https.request(connectionRequestOptions, (connectionResponse) => {
-        if (connectionResponse.statusCode === 200) {
-            let cookies = cookiesHelper.parse(connectionResponse.headers["set-cookie"]).join(';');
-            console.log('cookies:', cookies);
-
-            const onlinePlayersRequestOptions = {
-                hostname: 'discoverygc.com',
-                port: 443,
-                path: '/forums/api_interface.php?action=players_online',
-                method: 'GET',
-                headers: {
-                    'Cookie': cookies
-                }
-            };
-            const onlinePlayersRequest = https.request(onlinePlayersRequestOptions, (onlinePlayersResponse) => {
-                console.log('status code:', connectionResponse.statusCode);
-
-                var data = [];
-                onlinePlayersResponse.on('data', (chunk) => {
-                    data.push(chunk);
-                }).on('end', function () {
-                    let body = Buffer.concat(data).toString();
-                    console.log(body);
-                });
-            });
-            onlinePlayersRequest.end();
-        }
-    });
-
-    connectionRequest.write(discoGCAuthPostData);
-    connectionRequest.end();
-
-    // ---------------------------------------------
-
-    // // req.on('error', (e) => {
-    // //     console.error(e);
-    // // });
 
 });
 /* ----------------------------------------------------------------------------------------------- */
