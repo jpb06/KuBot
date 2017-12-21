@@ -3,22 +3,7 @@ const client = new Discord.Client({
     disableEveryone: true
 });
 
-let apiKey = '';
-let discogcAuthPostData = '';
-let local = false;
-
-try {
-    // case dev local
-    let privateSettings = require('./conf/private.config.local.js')
-    apiKey = privateSettings.env.apiKey;
-    discogcAuthPostData = privateSettings.env.discogcAuthPostData;
-    local = true;
-} catch (ex) {
-    // case deploy
-    apiKey = process.env.apiKey;
-    discogcAuthPostData = process.env.discogcAuthPostData;
-}
-
+const privateSettings = require('./conf/private.settings.js').initialize();
 const botSettings = require('./conf/bot.settings.json');
 const inviteLink = require('./business/util/invitelink.helper.js');
 
@@ -65,4 +50,4 @@ client.on('message', async message => {
     }
 });
 /* ----------------------------------------------------------------------------------------------- */
-client.login(apiKey);
+client.login(privateSettings.apiKey);
