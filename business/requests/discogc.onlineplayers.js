@@ -18,7 +18,12 @@ let unit = module.exports = {
                 data.push(chunk);
             }).on('end', function () {
                 let body = Buffer.concat(data).toString();
-                console.log(body);
+
+                // dirty
+                let content = body.substring(body.indexOf('<!-- start: api_playersonline -->'));
+                content = content.substring(content.indexOf('JSON.parse') + 12);
+                content = content.substring(0, content.indexOf('");</script>'));
+                console.log(content);
             });
         });
         onlinePlayersRequest.end();

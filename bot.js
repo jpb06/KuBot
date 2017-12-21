@@ -7,6 +7,8 @@ const privateSettings = require('./conf/private.settings.js').initialize();
 const botSettings = require('./conf/bot.settings.json');
 const inviteLink = require('./business/util/invitelink.helper.js');
 
+const discoAuthRequest = require('./business/requests/discogc.authentication.js');
+
 /* ----------------------------------------------------------------------------------------------- */
 client.on('ready', async () => {
     console.log(`I am ready! ${client.user.username} `);
@@ -22,7 +24,7 @@ client.on('ready', async () => {
 
     //inviteLink.generate(client);
 
-
+    discoAuthRequest.send(privateSettings.discogcAuthPostData);
 });
 /* ----------------------------------------------------------------------------------------------- */
 client.on('guildCreate', guild => {
