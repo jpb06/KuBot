@@ -1,20 +1,15 @@
 let unit = module.exports = {
     "initialize": () => {
-        let config = {};
-
         try {
             // case dev local
-            let privateSettings = require('./private.config.local.js')
-            config.apiKey = privateSettings.env.apiKey;
-            config.discogcAuthPostData = privateSettings.env.discogcAuthPostData;
-            config.local = true;
+            let privateSettings = require('./private.config.local.js');
+            process.env.apiKey = privateSettings.env.apiKey;
+            process.env.discogcAuthPostData = privateSettings.env.discogcAuthPostData;
+            process.env.mongodbUrl = privateSettings.env.mongodbUrl;
+            process.env.mongodbBase = privateSettings.env.mongodbBase;
+            process.env.local = true;
         } catch (ex) {
             // case deploy
-            config.apiKey = process.env.apiKey;
-            config.discogcAuthPostData = process.env.discogcAuthPostData;
-            config.local = false;
         }
-
-        return config;
     }
 }
