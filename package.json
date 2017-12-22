@@ -13,7 +13,8 @@
     "author": "jpb06",
     "license": "ISC",
     "dependencies": {
-        "discord.js": "^11.2.1"
+        "discord.js": "^11.2.1",
+        "mongodb": "^3.0.0-rc0"
     },
     "devDependencies": {},
     "repository": {

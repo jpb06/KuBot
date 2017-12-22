@@ -2,7 +2,7 @@ const https = require("https");
 const onlinePlayersRequest = require('./discogc.onlineplayers.js');
 
 let unit = module.exports = {
-    "send": (discoGCAuthPostData) => {
+    "send": () => {
         const connectionRequestOptions = {
             hostname: 'discoverygc.com',
             port: 443,
@@ -10,7 +10,7 @@ let unit = module.exports = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': discoGCAuthPostData.length
+                'Content-Length': process.env.discogcAuthPostData.length
             }
         };
 
@@ -20,7 +20,7 @@ let unit = module.exports = {
             }
         });
 
-        connectionRequest.write(discoGCAuthPostData);
+        connectionRequest.write(process.env.discogcAuthPostData);
         connectionRequest.end();
     }
 }
