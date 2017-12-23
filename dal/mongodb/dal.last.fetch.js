@@ -1,28 +1,28 @@
 const MongoClient = require("mongodb").MongoClient;
 
 let unit = module.exports = {
-    "setOnlinePlayers": async (onlinePlayers) => {
+    "set": async (time) => {
         const client = await MongoClient.connect(process.env.mongodbUrl);
         let db = client.db(process.env.mongodbBase);
 
         try {
-            await db.dropCollection('onlineplayers');
-            let collection = db.collection('onlineplayers');
+            await db.dropCollection('lastfetch');
+            let collection = db.collection('lastfetch');
 
-            await collection.insertMany(onlinePlayers, null);
+            await collection.insertOne({ date: time }, null);
         } finally {
             client.close();
         }
     },
-    "getOnlinePlayersByRegion": async (region) => {
+    "get": async () => {
         const client = await MongoClient.connect(process.env.mongodbUrl);
         let db = client.db(process.env.mongodbBase);
 
         try {
-            let collection = db.collection('onlineplayers');
-            const result = await collection.find({ Region: region }).toArray();
+            let collection = db.collection('lastfetch');
+            const result = await collection.find().toArray();
 
-            console.log('result: ', result);
+            return result[0];
         } finally {
             client.close();
         }
