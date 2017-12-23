@@ -1,3 +1,5 @@
+const dalFactions = require('./../../dal/mongodb/dal.factions.watch.js');
+
 const dataFetchingTask = require('./../tasks/fetch.online.players.task.js');
 const embedHelper = require('./../util/embed.helper.js');
 
@@ -6,29 +8,14 @@ let unit = module.exports = {
         let onlinePlayers = await dataFetchingTask.start();
 
         let factions = [];
-        factions.push({ name: '[KNF]', count: onlinePlayers.filter(player => player.Name.includes('[KNF]')).length });
+        let watchedFactions = await dalFactions.get();
+        watchedFactions.forEach(faction => {
+            let count = onlinePlayers.filter(player => faction.tags.some(tag => player.Name.includes(tag))).length;
 
-        let bdFaction = onlinePlayers.filter(player =>
-            player.Name.includes('BD|') ||
-            player.Name.includes('n~}')).length;
-        if (bdFaction > 0)
-            factions.push({ name: 'Blood Dragons', count: bdFaction });
-        let gcFaction = onlinePlayers.filter(player =>
-            player.Name.includes('GC|')).length;
-        if (gcFaction > 0)
-            factions.push({ name: 'Golden Chrysanthemums', count: gcFaction });
-        let samuraFaction = onlinePlayers.filter(player =>
-            player.Name.includes('Samura|-')).length;
-        if (samuraFaction > 0)
-            factions.push({ name: 'Samura', count: samuraFaction });
-        let kishiroFaction = onlinePlayers.filter(player =>
-            player.Name.includes('Kishiro|')).length;
-        if (kishiroFaction > 0)
-            factions.push({ name: 'Kishiro', count: kishiroFaction });
-        let hogoshaFaction = onlinePlayers.filter(player =>
-            player.Name.includes('[HA]')).length;
-        if (hogoshaFaction > 0)
-            factions.push({ name: 'Hogosha', count: hogoshaFaction });
+            if (faction.alwaysDisplay || count > 0) {
+                factions.push({ name: faction.name, count: count });
+            }
+        });
 
         let regions = [];
         regions.push({ name: 'Kusari', count: onlinePlayers.filter(player => player.Region == 'Kusari Space').length });
