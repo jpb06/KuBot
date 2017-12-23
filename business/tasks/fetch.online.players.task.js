@@ -17,7 +17,10 @@ let unit = module.exports = {
             let data = await discoOnlinePlayersRequest.send(cookies);
 
             // ??? why escaped quotes
-            let online = JSON.parse(data.replace(/\\"/g, '"'));
+            let online = ''
+            try {
+                online = JSON.parse(data.replace(/\\"/g, '"'));
+            } catch (err) { console.log(data); }
 
             await onlinePlayersDal.set(online.Players);
             await lastFetchDal.set(moment().format());
