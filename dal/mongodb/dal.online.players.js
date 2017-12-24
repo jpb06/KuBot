@@ -6,9 +6,9 @@ let unit = module.exports = {
         let db = client.db(process.env.mongodbBase);
 
         try {
-            await db.dropCollection('onlineplayers');
             let collection = db.collection('onlineplayers');
 
+            await collection.deleteMany();
             await collection.insertMany(onlinePlayers, null);
         } finally {
             client.close();

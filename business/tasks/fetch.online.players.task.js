@@ -8,7 +8,7 @@ const lastFetchDal = require('./../../dal/mongodb/dal.last.fetch.js');
 
 let unit = module.exports = {
     "start": async () => {
-        let lastFetch = await lastFetchDal.get();
+        let lastFetch = await lastFetchDal.get('onlineplayers');
         let now = moment();
 
         // request threshold to discogc = 2 minutes 
@@ -27,7 +27,7 @@ let unit = module.exports = {
             }
 
             await onlinePlayersDal.set(online.Players);
-            await lastFetchDal.set(moment().format());
+            await lastFetchDal.set('onlineplayers', moment().format());
 
             return online.Players;
         } else {
