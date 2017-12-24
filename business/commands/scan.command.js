@@ -1,5 +1,6 @@
 const dalFactions = require('./../../dal/mongodb/dal.factions.watch.js');
 const dalRegions = require('./../../dal/mongodb/dal.regions.watch.js');
+const dalPlayers = require('./../../dal/mongodb/dal.players.watch.js');
 
 const dataFetchingTask = require('./../tasks/fetch.online.players.task.js');
 const watchTransformTask = require('./../tasks/watch.transform.task.js');
@@ -17,6 +18,13 @@ let unit = module.exports = {
         let watchedRegions = await dalRegions.get();
         let regions = watchTransformTask.filter(onlinePlayers, watchedRegions, (watch, player) => {
             return watch.systems.some(system => player.System === system);
+        });
+
+        let watchedPlayers = await dalPlayers.get();
+
+        regions.forEach(region => {
+            let localWatch = watchedPlayers.filter(watchedPlayer => region.players.some(localPlayer => localPlayer.Name === watchedPlayer.name));
+            region.watch = localWatch;
         });
 
         message.channel.send({

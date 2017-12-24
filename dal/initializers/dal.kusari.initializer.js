@@ -1,5 +1,6 @@
 const dalFactions = require("./../mongodb/dal.factions.watch.js");
 const dalRegions = require("./../mongodb/dal.regions.watch.js");
+const dalPlayers = require("./../mongodb/dal.players.watch.js");
 
 let unit = module.exports = {
     "initialize": async () => {
@@ -19,6 +20,6 @@ let unit = module.exports = {
         dalRegions.add('taus', 'Taus', ['Tau-29', 'Tau-37', 'Tau-23', 'Tau-44'], false);
         dalRegions.add('sigmas', 'Sigmas', ['Sigma-19', 'Sigma-13', 'Sigma-21', 'Sigma-17', 'Okinawa'], false);
 
-
+        dalPlayers.add('Rokumonsen', ':Sanada:');
     }
 }
