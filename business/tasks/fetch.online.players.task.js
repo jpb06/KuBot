@@ -19,7 +19,7 @@ let unit = module.exports = {
             // ??? why escaped quotes
             let online = '';
             try {
-                online = JSON.parse(data.replace(/\\"/g, '"'));
+                online = JSON.parse(data.replace(/\\"/g, '"').replace(/\\"/g, '\"'));
 
             } catch (err) {
                 console.log(err);
