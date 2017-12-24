@@ -51,7 +51,15 @@ let unit = module.exports = {
         embed.addField('Factions', factionsDescription + '\n');
 
         regions.forEach(region => {
-            embed.addField(`**${region.name}** : ${region.count} players`, `~`);
+            let watch = '~';
+            if (region.watch.length > 0) {
+                watch = '';
+                region.watch.forEach(player => {
+                    watch += `${player.name} - ${player.comment}\n`;
+                });
+            }
+
+            embed.addField(`**${region.name}** : ${region.count} players`, watch);
         });
 
 
