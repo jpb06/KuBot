@@ -23,8 +23,16 @@ let unit = module.exports = {
         let watchedPlayers = await dalPlayers.get();
 
         regions.forEach(region => {
-            let localWatch = watchedPlayers.filter(watchedPlayer => region.players.some(localPlayer => localPlayer.Name === watchedPlayer.name));
-            region.watch = localWatch;
+            let localPlayersWatch = watchedPlayers.filter(watchedPlayer => region.players.some(localPlayer => localPlayer.Name === watchedPlayer.name));
+
+            watchedFactions.forEach(faction => {
+                let factionPlayers = region.players.filter(localPlayer => faction.tags.some(tag => localPlayer.Name.includes(tag)));
+                factionPlayers.forEach(player => {
+                    localPlayersWatch.push({ name: player.Name, comment: faction.name });
+                });
+            });
+
+            region.watch = localPlayersWatch;
         });
 
         message.channel.send({
