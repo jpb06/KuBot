@@ -10,6 +10,14 @@ const inviteLink = require('./business/util/invitelink.helper.js');
 const helpCommand = require('./business/commands/help.command.js');
 const scanCommand = require('./business/commands/scan.command.js');
 
+const dalKusari = require('./dal/initializers/dal.kusari.initializer.js');
+
+let initialize = async () => {
+    console.log('Initializing...');
+    await dalKusari.initialize();
+}
+initialize();
+
 /* ----------------------------------------------------------------------------------------------- */
 client.on('ready', async () => {
     console.log(`I am ready! ${client.user.username} `);
