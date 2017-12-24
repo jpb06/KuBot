@@ -40,19 +40,18 @@ let unit = module.exports = {
     "populateScan": (playersCount, factions, regions) => {
         let embed = unit.generateGeneric()
             .setColor(3447003)
-            .setTitle('Scanning...');
+            .setTitle(`**${playersCount} Players online**\n\n`)
+            .setDescription('Scanning House Kusari region...');
 
         let factionsDescription = '';
         factions.forEach(faction => {
-            factionsDescription += `**__${faction.name}__** : ${faction.count}\n`;
+            factionsDescription += `**${faction.name}** : ${faction.count}\n`;
         });
 
-        embed.setDescription(`**__Players online__** : ${playersCount}`);
-
-        embed.addField('Factions', factionsDescription);
+        embed.addField('Factions', factionsDescription + '\n');
 
         regions.forEach(region => {
-            embed.addField(`${region.name}`, `**__Population__** : ${region.count}`);
+            embed.addField(`**${region.name}** : ${region.count} players`, `~`);
         });
 
 
