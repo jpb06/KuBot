@@ -19,7 +19,9 @@ let unit = module.exports = {
         embed.addField('!help', 'Get help!\n\n' +
             commandsDescriptions.helpUsage())
             .addField('!scan', 'Scans Sirius sector.\n\n' +
-            commandsDescriptions.scanUsage());
+            commandsDescriptions.scanUsage())
+            .addField('!watch', 'Adds a player to the watch list.\n\n' +
+            commandsDescriptions.watchUsage());
 
         return embed;
     },
@@ -55,7 +57,12 @@ let unit = module.exports = {
             if (region.watch.length > 0) {
                 watch = '';
                 region.watch.forEach(player => {
-                    watch += `${player.name} - ${player.comment}\n`;
+                    watch += `${player.name}`;
+
+                    if (player.comment)
+                        watch += ` - ${player.comment}`;
+
+                    watch += '\n';
                 });
             }
 
@@ -64,5 +71,33 @@ let unit = module.exports = {
 
 
         return embed;
-    }
+    },
+    "populateWatchError": (authorName, authorAvatarUrl, errors) => {
+        let embed = unit.generateGeneric()
+            .setColor(10684167)
+            .setAuthor(authorName, authorAvatarUrl)
+            .setTitle('Invalid request')
+            .setDescription(commandsDescriptions.watchUsage())
+            .addField('Errors', errors);
+
+        return embed;
+    },
+    "notifyPlayerAddedToWatchList": (authorName, authorAvatarUrl, name) => {
+        let embed = unit.generateGeneric()
+            .setColor(3447003)
+            .setAuthor(authorName, authorAvatarUrl)
+            .setTitle('Ryoukai!')
+            .setDescription(`${name} added to the watch list`);
+
+        return embed;
+    },
+    "notifyPlayerAlreadyInFactionsWatchError": (authorName, authorAvatarUrl, name, factions) => {
+        let embed = unit.generateGeneric()
+            .setColor(3447003)
+            .setAuthor(authorName, authorAvatarUrl)
+            .setTitle('Error')
+            .setDescription(`${name} is already under watch for belonging to the following faction(s) :\n\n${factions}`);
+
+        return embed;
+    },
 }
