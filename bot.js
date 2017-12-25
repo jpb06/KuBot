@@ -9,6 +9,7 @@ const inviteLink = require('./business/util/invitelink.helper.js');
 
 const helpCommand = require('./business/commands/help.command.js');
 const scanCommand = require('./business/commands/scan.command.js');
+const watchCommand = require('./business/commands/watch.command.js');
 
 const dalKusari = require('./dal/initializers/dal.kusari.initializer.js');
 
@@ -54,14 +55,26 @@ client.on('message', async message => {
     if (message.channel.name === botSettings.defaultChannel ||
         message.channel.name === botSettings.adminChannel) {
 
-        let messageChunks = message.content.toLowerCase().slice(botSettings.prefix.length).trim().split(/ +/g);
-        let command = messageChunks[0];
-
+        let messageChunks = message.content.slice(botSettings.prefix.length).trim().split(/ +/g);
+        let command = messageChunks[0].toLowerCase();
+        /* ------------------------------------------------------------------------------------------- 
+        help command | !help
+        ------------------------------------------------------------------------------------------- */
         if (command === 'help') {
             helpCommand.process(message);
         }
+        /* ------------------------------------------------------------------------------------------- 
+        scan command | !scan
+        ------------------------------------------------------------------------------------------- */
         if (command === 'scan') {
             scanCommand.process(message, client);
+        }
+        /* ------------------------------------------------------------------------------------------- 
+        watch command | !watch <name> <comment>
+        ------------------------------------------------------------------------------------------- */
+        if (command === 'watch') {
+            let args = messageChunks.splice(1);
+            watchCommand.process(args, message, client);
         }
 
     }
