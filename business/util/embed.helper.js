@@ -24,7 +24,9 @@ let unit = module.exports = {
             .addField('!scan', 'Scans Sirius sector.\n\n' +
             commandsDescriptions.scanUsage())
             .addField('!watch', 'Adds a player to the watch list.\n\n' +
-            commandsDescriptions.watchUsage());
+            commandsDescriptions.watchUsage())
+            .addField('!show', 'Displays a watch list.\n\n' +
+            commandsDescriptions.showUsage());
 
         return embed;
     },
@@ -32,6 +34,16 @@ let unit = module.exports = {
         let embed = unit.generateGeneric()
             .setTitle('KuBot successfully loaded')
             .setDescription('I am now ready for action!\n\nType !help to see what I can do!');
+
+        return embed;
+    },
+    "validationError": (authorName, authorAvatarUrl, usage, errors) => {
+        let embed = unit.generateGeneric()
+            .setColor(10684167)
+            .setAuthor(authorName, authorAvatarUrl)
+            .setTitle('Invalid request')
+            .setDescription(usage)
+            .addField('Errors', errors);
 
         return embed;
     },
@@ -84,16 +96,6 @@ let unit = module.exports = {
     /* ---------------------------------------------------------------------------------------------------------------
         Watch command
        ---------------------------------------------------------------------------------------------------------------*/
-    "watchError": (authorName, authorAvatarUrl, errors) => {
-        let embed = unit.generateGeneric()
-            .setColor(10684167)
-            .setAuthor(authorName, authorAvatarUrl)
-            .setTitle('Invalid request')
-            .setDescription(commandsDescriptions.watchUsage())
-            .addField('Errors', errors);
-
-        return embed;
-    },
     "playerAlreadyInFactionsWatchError": (authorName, authorAvatarUrl, name, factions) => {
         let embed = unit.generateGeneric()
             .setColor(3447003)
@@ -109,6 +111,28 @@ let unit = module.exports = {
             .setAuthor(authorName, authorAvatarUrl)
             .setTitle('Ryoukai!')
             .setDescription(`${name} added to the watch list`);
+
+        return embed;
+    },
+    /* ---------------------------------------------------------------------------------------------------------------
+       Show command
+      ---------------------------------------------------------------------------------------------------------------*/
+    "watchedPlayers": (watchedPlayers) => {
+        let embed = unit.generateGeneric()
+            .setColor(3447003)
+            .setTitle(`**${watchedPlayers.length} Players in watch list**\n\n`);
+
+        let description = '';
+
+        watchedPlayers
+            .sort((a, b) => a.name < b.name)
+            .forEach(player => {
+                description += '- **' + player.name + '**';
+                if (player.comment) description += ' - ' + player.comment;
+                description += '\n';
+            });
+
+        embed.setDescription(description);
 
         return embed;
     },
