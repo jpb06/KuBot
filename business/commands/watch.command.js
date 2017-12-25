@@ -2,6 +2,7 @@ const argumentsValidation = require('./shared/arguments.validation.js');
 const embedHelper = require('./../util/embed.helper.js');
 const playersWatchDal = require('./../../dal/mongodb/dal.players.watch.js');
 const factionsWatchDal = require('./../../dal/mongodb/dal.factions.watch.js');
+const commandsDescriptions = require('./shared/commands.description.js');
 
 let unit = module.exports = {
     "process": async (args, message, client) => {
@@ -9,7 +10,12 @@ let unit = module.exports = {
 
         if (validation.errors.length > 0) {
             message.channel.send({
-                embed: embedHelper.watchError(client.user.username, client.user.avatarURL, validation.errors)
+                embed: embedHelper.validationError(
+                    client.user.username,
+                    client.user.avatarURL,
+                    commandsDescriptions.watchUsage(),
+                    validation.errors
+                )
             });
         } else {
             let watchedFactions = await factionsWatchDal.get();
