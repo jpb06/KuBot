@@ -10,6 +10,7 @@ const inviteLink = require('./business/util/invitelink.helper.js');
 const helpCommand = require('./business/commands/help.command.js');
 const scanCommand = require('./business/commands/scan.command.js');
 const watchCommand = require('./business/commands/watch.command.js');
+const showCommand = require('./business/commands/show.command.js');
 
 const dalKusari = require('./dal/initializers/dal.kusari.initializer.js');
 
@@ -75,6 +76,13 @@ client.on('message', async message => {
         if (command === 'watch') {
             let args = messageChunks.splice(1);
             watchCommand.process(args, message, client);
+        }
+        /* ------------------------------------------------------------------------------------------- 
+        show command | !show <term>
+        ------------------------------------------------------------------------------------------- */
+        if (command === 'show') {
+            let args = messageChunks.splice(1).join('');
+            showCommand.process(args, message, client);
         }
 
     }
