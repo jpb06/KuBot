@@ -19,14 +19,11 @@ let unit = module.exports = {
         return embed;
     },
     "commandsDescription": (embed) => {
-        embed.addField('!help', 'Get help!\n\n' +
-            commandsDescriptions.helpUsage())
-            .addField('!scan', 'Scans Sirius sector.\n\n' +
-            commandsDescriptions.scanUsage())
-            .addField('!watch', 'Adds a player to the watch list.\n\n' +
-            commandsDescriptions.watchUsage())
-            .addField('!show', 'Displays a watch list.\n\n' +
-            commandsDescriptions.showUsage());
+        embed
+            .addField('!help', 'Get help!\n')
+            .addField('!scan', 'Scans Sirius sector.\n')
+            .addField('!watch', 'Adds a player to the watch list.\n')
+            .addField('!show', 'Displays a watch list.\n')
 
         return embed;
     },
