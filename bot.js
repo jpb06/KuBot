@@ -28,7 +28,7 @@ client.on('ready', async () => {
     // if (!process.env.local) {
     //   client.guilds.forEach(guild => {
     //     let channel = guild.channels.find(channel => channel.name === botSettings.defaultChannel);
-    //     channel.send({ tts: false, embed: embedHelper.populateLoadedNotification() });
+    //     channel.send({ tts: false, embed: embedHelper.loadedNotification() });
     //   });
     // }
 

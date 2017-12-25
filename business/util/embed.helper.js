@@ -7,6 +7,9 @@ let unit = module.exports = {
         unit.botAvatarUrl = botAvatarUrl;
         return unit;
     },
+    /* ---------------------------------------------------------------------------------------------------------------
+        Generic
+       ---------------------------------------------------------------------------------------------------------------*/
     "generateGeneric": () => {
         let embed = new Discord.RichEmbed()
             .setThumbnail('https://i.imgur.com/V16L8i9.jpg')
@@ -15,7 +18,7 @@ let unit = module.exports = {
 
         return embed;
     },
-    "populateCommandsDescription": (embed) => {
+    "commandsDescription": (embed) => {
         embed.addField('!help', 'Get help!\n\n' +
             commandsDescriptions.helpUsage())
             .addField('!scan', 'Scans Sirius sector.\n\n' +
@@ -25,21 +28,27 @@ let unit = module.exports = {
 
         return embed;
     },
-    "populateLoadedNotification": () => {
+    "loadedNotification": () => {
         let embed = unit.generateGeneric()
             .setTitle('KuBot successfully loaded')
             .setDescription('I am now ready for action!\n\nType !help to see what I can do!');
 
         return embed;
     },
-    "populateHelp": () => {
+    /* ---------------------------------------------------------------------------------------------------------------
+        Help command
+       ---------------------------------------------------------------------------------------------------------------*/
+    "help": () => {
         let embed = unit.generateGeneric()
             .setTitle('KuBot is monitoring Sirius Sector for you!')
             .setDescription('I am doing my best to answer your requests. Please take a look at the following commands :');
 
-        return unit.populateCommandsDescription(embed);
+        return unit.commandsDescription(embed);
     },
-    "populateScan": (playersCount, factions, regions) => {
+    /* ---------------------------------------------------------------------------------------------------------------
+        Scan command
+       ---------------------------------------------------------------------------------------------------------------*/
+    "scan": (playersCount, factions, regions) => {
         let embed = unit.generateGeneric()
             .setColor(3447003)
             .setTitle(`**${playersCount} Players online**\n\n`)
@@ -72,7 +81,10 @@ let unit = module.exports = {
 
         return embed;
     },
-    "populateWatchError": (authorName, authorAvatarUrl, errors) => {
+    /* ---------------------------------------------------------------------------------------------------------------
+        Watch command
+       ---------------------------------------------------------------------------------------------------------------*/
+    "watchError": (authorName, authorAvatarUrl, errors) => {
         let embed = unit.generateGeneric()
             .setColor(10684167)
             .setAuthor(authorName, authorAvatarUrl)
@@ -82,21 +94,21 @@ let unit = module.exports = {
 
         return embed;
     },
-    "notifyPlayerAddedToWatchList": (authorName, authorAvatarUrl, name) => {
-        let embed = unit.generateGeneric()
-            .setColor(3447003)
-            .setAuthor(authorName, authorAvatarUrl)
-            .setTitle('Ryoukai!')
-            .setDescription(`${name} added to the watch list`);
-
-        return embed;
-    },
-    "notifyPlayerAlreadyInFactionsWatchError": (authorName, authorAvatarUrl, name, factions) => {
+    "playerAlreadyInFactionsWatchError": (authorName, authorAvatarUrl, name, factions) => {
         let embed = unit.generateGeneric()
             .setColor(3447003)
             .setAuthor(authorName, authorAvatarUrl)
             .setTitle('Error')
             .setDescription(`${name} is already under watch for belonging to the following faction(s) :\n\n${factions}`);
+
+        return embed;
+    },
+    "playerAddedToWatchList": (authorName, authorAvatarUrl, name) => {
+        let embed = unit.generateGeneric()
+            .setColor(3447003)
+            .setAuthor(authorName, authorAvatarUrl)
+            .setTitle('Ryoukai!')
+            .setDescription(`${name} added to the watch list`);
 
         return embed;
     },

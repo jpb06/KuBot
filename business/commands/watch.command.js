@@ -9,7 +9,7 @@ let unit = module.exports = {
 
         if (validation.errors.length > 0) {
             message.channel.send({
-                embed: embedHelper.populateWatchError(client.user.username, client.user.avatarURL, validation.errors)
+                embed: embedHelper.watchError(client.user.username, client.user.avatarURL, validation.errors)
             });
         } else {
             let watchedFactions = await factionsWatchDal.get();
@@ -21,12 +21,12 @@ let unit = module.exports = {
                 });
 
                 message.channel.send({
-                    embed: embedHelper.notifyPlayerAlreadyInFactionsWatchError(client.user.username, client.user.avatarURL, validation.args.player, playerFactionsDesc)
+                    embed: embedHelper.playerAlreadyInFactionsWatchError(client.user.username, client.user.avatarURL, validation.args.player, playerFactionsDesc)
                 });
             } else {
                 await playersWatchDal.add(validation.args.player, validation.args.comment);
                 message.channel.send({
-                    embed: embedHelper.notifyPlayerAddedToWatchList(client.user.username, client.user.avatarURL, validation.args.player)
+                    embed: embedHelper.playerAddedToWatchList(client.user.username, client.user.avatarURL, validation.args.player)
                 });
             }
         }

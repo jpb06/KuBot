@@ -36,7 +36,7 @@ let unit = module.exports = {
         });
 
         message.channel.send({
-            embed: embedHelper.populateScan(onlinePlayers.length, factions, regions)
+            embed: embedHelper.scan(onlinePlayers.length, factions, regions)
         });
     }
 }
