@@ -27,6 +27,12 @@ let unit = module.exports = {
 
         return embed;
     },
+    "commandsDescriptionAdmin": (embed) => {
+        embed
+            .addField('!remove', 'Removes a player or a faction from watch lists\n')
+
+        return embed;
+    },
     "loadedNotification": () => {
         let embed = unit.generateGeneric()
             .setTitle('KuBot successfully loaded')
@@ -53,6 +59,12 @@ let unit = module.exports = {
             .setDescription('I am doing my best to answer your requests. Please take a look at the following commands :');
 
         return unit.commandsDescription(embed);
+    },
+    "helpAdmin": () => {
+        let embed = unit.generateGeneric()
+            .setTitle('Admin commands');
+
+        return unit.commandsDescriptionAdmin(embed);
     },
     /* ---------------------------------------------------------------------------------------------------------------
         Scan command

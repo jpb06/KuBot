@@ -5,5 +5,10 @@ let unit = module.exports = {
         message.channel.send({
             embed: embedHelper.help()
         });
+    },
+    "processAdmin": (message) => {
+        message.channel.send({
+            embed: embedHelper.helpAdmin()
+        });
     }
 }

@@ -85,7 +85,6 @@ client.on('message', async message => {
             let args = messageChunks.splice(1).join('');
             await showCommand.process(args, message, client);
         }
-
     }
 
     // admin
@@ -96,6 +95,9 @@ client.on('message', async message => {
         if (command === 'remove') {
             let args = messageChunks.splice(1);
             await adminRemoveCommand.process(args, message, client);
+        }
+        if (command === 'help') {
+            helpCommand.processAdmin(message);
         }
     }
 });
