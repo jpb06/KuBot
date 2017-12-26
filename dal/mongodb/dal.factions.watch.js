@@ -31,5 +31,22 @@ let unit = module.exports = {
         } finally {
             client.close();
         }
+    },
+    "remove": async (identifier) => {
+        const client = await MongoClient.connect(process.env.mongodbUrl);
+        let db = client.db(process.env.mongodbBase);
+
+        try {
+            let collection = db.collection('factionswatch');
+
+            let deleted = await collection.findOneAndDelete(
+                { identifier: identifier }
+            );
+
+            return deleted.value !== null;
+
+        } finally {
+            client.close();
+        }
     }
 }
