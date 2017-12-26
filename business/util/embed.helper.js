@@ -95,7 +95,7 @@ let unit = module.exports = {
        ---------------------------------------------------------------------------------------------------------------*/
     "playerAlreadyInFactionsWatchError": (authorName, authorAvatarUrl, name, factions) => {
         let embed = unit.generateGeneric()
-            .setColor(3447003)
+            .setColor(10684167)
             .setAuthor(authorName, authorAvatarUrl)
             .setTitle('Error')
             .setDescription(`${name} is already under watch for belonging to the following faction(s) :\n\n${factions}`);
@@ -114,22 +114,32 @@ let unit = module.exports = {
     /* ---------------------------------------------------------------------------------------------------------------
        Show command
       ---------------------------------------------------------------------------------------------------------------*/
-    "watchedPlayers": (watchedPlayers) => {
+    "show": (count, description, type) => {
         let embed = unit.generateGeneric()
             .setColor(3447003)
-            .setTitle(`**${watchedPlayers.length} Players in watch list**\n\n`);
+            .setTitle(`**${count} ${type} in watch list**\n\n`)
+            .setDescription(description);
 
-        let description = '';
+        return embed;
+    },
+    /* ---------------------------------------------------------------------------------------------------------------
+      remove admin command
+     ---------------------------------------------------------------------------------------------------------------*/
+    "removed": (authorName, authorAvatarUrl, term, type) => {
+        let embed = unit.generateGeneric()
+            .setColor(3447003)
+            .setAuthor(authorName, authorAvatarUrl)
+            .setTitle('Ryoukai!')
+            .setDescription(`${term} was removed from ${type} watch list`);
 
-        watchedPlayers
-            .sort((a, b) => a.name < b.name)
-            .forEach(player => {
-                description += '- **' + player.name + '**';
-                if (player.comment) description += ' - ' + player.comment;
-                description += '\n';
-            });
-
-        embed.setDescription(description);
+        return embed;
+    },
+    "failedToRemove": (authorName, authorAvatarUrl, term, type) => {
+        let embed = unit.generateGeneric()
+            .setColor(10684167)
+            .setAuthor(authorName, authorAvatarUrl)
+            .setTitle('Request failure')
+            .setDescription(`${term} isn't defined in ${type} watch list`);
 
         return embed;
     },
