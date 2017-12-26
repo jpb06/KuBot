@@ -11,6 +11,7 @@ const helpCommand = require('./business/commands/help.command.js');
 const scanCommand = require('./business/commands/scan.command.js');
 const watchCommand = require('./business/commands/watch.command.js');
 const showCommand = require('./business/commands/show.command.js');
+const adminRemoveCommand = require('./business/commands/admin.remove.command.js');
 
 const dalKusari = require('./dal/initializers/dal.kusari.initializer.js');
 
@@ -53,11 +54,11 @@ client.on('message', async message => {
     if (message.channel.type === 'dm') return; // direct messages should be ignored
     if (!message.content.startsWith(botSettings.prefix)) return; // ignoring messages not starting with command prefix  
 
+    let messageChunks = message.content.slice(botSettings.prefix.length).trim().split(/ +/g);
+    let command = messageChunks[0].toLowerCase();
+
     if (message.channel.name === botSettings.defaultChannel ||
         message.channel.name === botSettings.adminChannel) {
-
-        let messageChunks = message.content.slice(botSettings.prefix.length).trim().split(/ +/g);
-        let command = messageChunks[0].toLowerCase();
         /* ------------------------------------------------------------------------------------------- 
         help command | !help
         ------------------------------------------------------------------------------------------- */
@@ -68,23 +69,34 @@ client.on('message', async message => {
         scan command | !scan
         ------------------------------------------------------------------------------------------- */
         if (command === 'scan') {
-            scanCommand.process(message, client);
+            await scanCommand.process(message, client);
         }
         /* ------------------------------------------------------------------------------------------- 
         watch command | !watch <name> <comment>
         ------------------------------------------------------------------------------------------- */
         if (command === 'watch') {
             let args = messageChunks.splice(1);
-            watchCommand.process(args, message, client);
+            await watchCommand.process(args, message, client);
         }
         /* ------------------------------------------------------------------------------------------- 
         show command | !show <term>
         ------------------------------------------------------------------------------------------- */
         if (command === 'show') {
             let args = messageChunks.splice(1).join('');
-            showCommand.process(args, message, client);
+            await showCommand.process(args, message, client);
         }
 
+    }
+
+    // admin
+    if (message.channel.name === botSettings.adminChannel) {
+        /* ------------------------------------------------------------------------------------------- 
+        remove command | !remove <target> <term>
+        ------------------------------------------------------------------------------------------- */
+        if (command === 'remove') {
+            let args = messageChunks.splice(1);
+            await adminRemoveCommand.process(args, message, client);
+        }
     }
 });
 /* ----------------------------------------------------------------------------------------------- */

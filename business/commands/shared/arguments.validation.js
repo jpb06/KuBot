@@ -23,14 +23,23 @@ let unit = module.exports = {
         return { errors: errors, args: validatedArgs };
     },
     "checkShowArgs": (parameter) => {
-        let errors = '';
-        let expectedParameter = ['players', 'p'];
+        let expectedParameter = ['players', 'p', 'factions', 'f'];
 
-        if (parameter.length === 0)
-            errors += 'Expecting at least one argument\n';
+        if (!parameter || parameter.length === 0)
+            return 'Expecting one argument\n';
         if (!expectedParameter.includes(parameter))
-            errors += 'Incorrect parameter\n';
+            return 'Illegal parameter\n';
 
-        return errors;
+        return '';
+    },
+    "checkAdminRemoveArgs": (args) => {
+        let expectedFirstParameter = ['player', 'p', 'faction', 'f'];
+
+        if (args.length !== 2)
+            return 'Expecting two arguments\n';
+        if (!expectedFirstParameter.includes(args[0]))
+            return 'Illegal first parameter\n';
+
+        return '';
     }
 }
