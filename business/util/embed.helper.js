@@ -2,9 +2,19 @@ const Discord = require('discord.js');
 const commandsDescriptions = require('./../commands/shared/commands.description.js');
 
 let unit = module.exports = {
-    "botAvatarUrl": '',
-    "init": (botAvatarUrl) => {
-        unit.botAvatarUrl = botAvatarUrl;
+    "setup": (channel, guildSettings, authorName, authorAvatarUrl) => {
+        unit.channel = channel;
+
+        if (guildSettings) {
+            unit.messagesImage = guildSettings.messagesImage;
+            unit.messagesFooterName = guildSettings.messagesFooterName;
+            unit.messagesImage = guildSettings.messagesImage;
+            unit.scanMainRegionName = guildSettings.scanMainRegionName;
+            unit.acknowledged = guildSettings.acknowledged;
+        }
+        unit.authorName = authorName;
+        unit.authorAvatarUrl = authorAvatarUrl;
+
         return unit;
     },
     /* ---------------------------------------------------------------------------------------------------------------
@@ -12,9 +22,9 @@ let unit = module.exports = {
        ---------------------------------------------------------------------------------------------------------------*/
     "generateGeneric": () => {
         let embed = new Discord.RichEmbed()
-            .setThumbnail('https://i.imgur.com/V16L8i9.jpg')
+            .setThumbnail(unit.messagesImage)
             .setTimestamp(new Date())
-            .setFooter('Kusari Kaigun', unit.botAvatarUrl);
+            .setFooter(unit.messagesFooterName, unit.messagesImage);
 
         return embed;
     },
@@ -33,47 +43,44 @@ let unit = module.exports = {
 
         return embed;
     },
-    "loadedNotification": () => {
-        let embed = unit.generateGeneric()
-            .setTitle('KuBot successfully loaded')
-            .setDescription('I am now ready for action!\n\nType !help to see what I can do!');
-
-        return embed;
-    },
-    "validationError": (authorName, authorAvatarUrl, usage, errors) => {
-        let embed = unit.generateGeneric()
-            .setColor(10684167)
-            .setAuthor(authorName, authorAvatarUrl)
-            .setTitle('Invalid request')
-            .setDescription(usage)
-            .addField('Errors', errors);
-
-        return embed;
+    "sendValidationError": (usage, errors) => {
+        unit.channel.send({
+            embed: unit.generateGeneric(unit.guildSettings)
+                .setColor(10684167)
+                .setAuthor(unit.authorName, unit.authorAvatarUrl)
+                .setTitle('Invalid request')
+                .setDescription(usage)
+                .addField('Errors', errors)
+        });
     },
     /* ---------------------------------------------------------------------------------------------------------------
         Help command
        ---------------------------------------------------------------------------------------------------------------*/
-    "help": () => {
-        let embed = unit.generateGeneric()
-            .setTitle('KuBot is monitoring Sirius Sector for you!')
-            .setDescription('I am doing my best to answer your requests. Please take a look at the following commands :');
-
-        return unit.commandsDescription(embed);
+    "sendHelpResponse": () => {
+        unit.channel.send({
+            embed: unit.commandsDescription(
+                unit.generateGeneric()
+                    .setTitle('KuBot is monitoring Sirius Sector for you!')
+                    .setDescription('I am doing my best to answer your requests. Please take a look at the following commands :')
+            )
+        });
     },
-    "helpAdmin": () => {
-        let embed = unit.generateGeneric()
-            .setTitle('Admin commands');
-
-        return unit.commandsDescriptionAdmin(embed);
+    "sendHelpAdminResponse": () => {
+        unit.channel.send({
+            embed: unit.commandsDescriptionAdmin(
+                unit.generateGeneric()
+                    .setTitle('Admin commands')
+            )
+        });
     },
     /* ---------------------------------------------------------------------------------------------------------------
         Scan command
        ---------------------------------------------------------------------------------------------------------------*/
-    "scan": (playersCount, factions, regions) => {
+    "sendScanResponse": (playersCount, factions, regions) => {
         let embed = unit.generateGeneric()
             .setColor(3447003)
             .setTitle(`**${playersCount} Players online**\n\n`)
-            .setDescription('Scanning House Kusari region...');
+            .setDescription(`Scanning ${unit.scanMainRegionName}...`);
 
         let factionsDescription = '';
         factions.forEach(faction => {
@@ -99,60 +106,61 @@ let unit = module.exports = {
             embed.addField(`**${region.name}** : ${region.count} players`, watch);
         });
 
-
-        return embed;
+        unit.channel.send({
+            embed: embed
+        });
     },
     /* ---------------------------------------------------------------------------------------------------------------
         Watch command
        ---------------------------------------------------------------------------------------------------------------*/
-    "playerAlreadyInFactionsWatchError": (authorName, authorAvatarUrl, name, factions) => {
-        let embed = unit.generateGeneric()
-            .setColor(10684167)
-            .setAuthor(authorName, authorAvatarUrl)
-            .setTitle('Error')
-            .setDescription(`${name} is already under watch for belonging to the following faction(s) :\n\n${factions}`);
-
-        return embed;
+    "sendFactionPlayerWatchError": (name, factions) => {
+        unit.channel.send({
+            embed: unit.generateGeneric()
+                .setColor(10684167)
+                .setAuthor(unit.authorName, unit.authorAvatarUrl)
+                .setTitle('Error')
+                .setDescription(`${name} is already under watch for belonging to the following faction(s) :\n\n${factions}`)
+        });
     },
-    "playerAddedToWatchList": (authorName, authorAvatarUrl, name) => {
-        let embed = unit.generateGeneric()
-            .setColor(3447003)
-            .setAuthor(authorName, authorAvatarUrl)
-            .setTitle('Ryoukai!')
-            .setDescription(`${name} added to the watch list`);
-
-        return embed;
+    "sendWatchResponse": (name) => {
+        unit.channel.send({
+            embed: unit.generateGeneric()
+                .setColor(3447003)
+                .setAuthor(unit.authorName, unit.authorAvatarUrl)
+                .setTitle(`${unit.acknowledged}`)
+                .setDescription(`${name} added to the watch list`)
+        });
     },
     /* ---------------------------------------------------------------------------------------------------------------
        Show command
       ---------------------------------------------------------------------------------------------------------------*/
-    "show": (count, description, type) => {
-        let embed = unit.generateGeneric()
-            .setColor(3447003)
-            .setTitle(`**${count} ${type} in watch list**\n\n`)
-            .setDescription(description);
-
-        return embed;
+    "sendShowResponse": (count, description, type) => {
+        unit.channel.send({
+            embed: unit.generateGeneric()
+                .setColor(3447003)
+                .setTitle(`**${count} ${type} in watch list**\n\n`)
+                .setDescription(description)
+        });
     },
     /* ---------------------------------------------------------------------------------------------------------------
       remove admin command
      ---------------------------------------------------------------------------------------------------------------*/
-    "removed": (authorName, authorAvatarUrl, term, type) => {
-        let embed = unit.generateGeneric()
-            .setColor(3447003)
-            .setAuthor(authorName, authorAvatarUrl)
-            .setTitle('Ryoukai!')
-            .setDescription(`${term} was removed from ${type} watch list`);
-
-        return embed;
+    "sendRemoveResponse": (term, type) => {
+        unit.channel.send({
+            embed: unit.generateGeneric()
+                .setColor(3447003)
+                .setAuthor(unit.authorName, unit.authorAvatarUrl)
+                .setTitle(`${unit.acknowledged}`)
+                .setDescription(`${term} was removed from ${type} watch list`)
+        });
     },
-    "failedToRemove": (authorName, authorAvatarUrl, term, type) => {
-        let embed = unit.generateGeneric()
-            .setColor(10684167)
-            .setAuthor(authorName, authorAvatarUrl)
-            .setTitle('Request failure')
-            .setDescription(`${term} isn't defined in ${type} watch list`);
-
-        return embed;
+    "sendRemovalFailure": (term, type) => {
+        unit.channel.send({
+            embed: unit.generateGeneric()
+                .setColor(10684167)
+                .setAuthor(unit.authorName, unit.authorAvatarUrl)
+                .setTitle('Request failure')
+                .setDescription(`${term} isn't defined in ${type} watch list`)
+        });
     },
 }
