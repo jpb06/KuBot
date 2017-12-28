@@ -1,14 +1,14 @@
 const embedHelper = require('./../util/embed.helper.js');
 
 let unit = module.exports = {
-    "process": (message) => {
-        message.channel.send({
-            embed: embedHelper.help()
-        });
+    "process": (guildSettings, message) => {
+        embedHelper
+            .setup(message.channel, guildSettings)
+            .sendHelpResponse();
     },
-    "processAdmin": (message) => {
-        message.channel.send({
-            embed: embedHelper.helpAdmin()
-        });
+    "processAdmin": (guildSettings, message) => {
+        embedHelper
+            .setup(message.channel, guildSettings)
+            .sendHelpAdminResponse();
     }
 }

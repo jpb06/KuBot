@@ -1,5 +1,3 @@
 {
-    "prefix": "!",
-    "defaultChannel": "bots",
-    "adminChannel": "admin"
+    "prefix": "!"
 }
