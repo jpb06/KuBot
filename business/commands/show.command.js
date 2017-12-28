@@ -6,21 +6,15 @@ const playersWatchDal = require('./../../dal/mongodb/dal.players.watch.js');
 const factionsWatchDal = require('./../../dal/mongodb/dal.factions.watch.js');
 
 let unit = module.exports = {
-    "process": async (args, message, client) => {
+    "process": async (guildSettings, args, message, client) => {
+        embedHelper.setup(message.channel, guildSettings, client.user.username, client.user.avatarURL);
         let errors = argumentsValidation.checkShowArgs(args);
 
         if (errors.length > 0) {
-            message.channel.send({
-                embed: embedHelper.validationError(
-                    client.user.username,
-                    client.user.avatarURL,
-                    commandsDescriptions.showUsage(),
-                    errors
-                )
-            });
+            embedHelper.sendValidationError(commandsDescriptions.showUsage(), errors);
         } else {
             if (args === 'players' || args === 'p') {
-                let watchedPlayers = await playersWatchDal.get();
+                let watchedPlayers = await playersWatchDal.get(message.guild.id);
 
                 let description = '';
                 watchedPlayers
@@ -31,11 +25,9 @@ let unit = module.exports = {
                         description += '\n';
                     });
 
-                message.channel.send({
-                    embed: embedHelper.show(watchedPlayers.length, description, 'Players')
-                });
+                embedHelper.sendShowResponse(watchedPlayers.length, description, 'Players');
             } else if (args === 'factions' || args === 'f') {
-                let watchedFactions = await factionsWatchDal.get();
+                let watchedFactions = await factionsWatchDal.get(message.guild.id);
 
                 let description = '';
                 watchedFactions
@@ -51,9 +43,7 @@ let unit = module.exports = {
                         description = description.slice(0, -2) + '\n\n';
                     });
 
-                message.channel.send({
-                    embed: embedHelper.show(watchedFactions.length, description, 'Factions')
-                });
+                embedHelper.sendShowResponse(watchedFactions.length, description, 'Factions');
             }
         }
     }
