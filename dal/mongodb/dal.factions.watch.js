@@ -1,21 +1,21 @@
 const MongoClient = require("mongodb").MongoClient;
 
 let unit = module.exports = {
-    "get": async () => {
+    "get": async (guildId) => {
         const client = await MongoClient.connect(process.env.mongodbUrl);
         let db = client.db(process.env.mongodbBase);
 
         try {
             let collection = db.collection('factionswatch');
 
-            const result = await collection.find().toArray();
+            const result = await collection.find({ guildId: guildId }).toArray();
 
             return result;
         } finally {
             client.close();
         }
     },
-    "add": async (identifier, name, tags, alwaysDisplay) => {
+    "add": async (identifier, guildId, name, tags, alwaysDisplay) => {
         const client = await MongoClient.connect(process.env.mongodbUrl);
         let db = client.db(process.env.mongodbBase);
 
@@ -24,7 +24,7 @@ let unit = module.exports = {
 
             await collection.findOneAndUpdate(
                 { identifier: identifier },
-                { identifier: identifier, name: name, tags: tags, alwaysDisplay: alwaysDisplay },
+                { identifier: identifier, guildId: guildId, name: name, tags: tags, alwaysDisplay: alwaysDisplay },
                 { upsert: true }
             );
 
@@ -32,7 +32,7 @@ let unit = module.exports = {
             client.close();
         }
     },
-    "remove": async (identifier) => {
+    "remove": async (guildId, identifier) => {
         const client = await MongoClient.connect(process.env.mongodbUrl);
         let db = client.db(process.env.mongodbBase);
 
@@ -40,7 +40,7 @@ let unit = module.exports = {
             let collection = db.collection('factionswatch');
 
             let deleted = await collection.findOneAndDelete(
-                { identifier: identifier }
+                { guildId: guildId, identifier: identifier }
             );
 
             return deleted.value !== null;

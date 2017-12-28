@@ -1,21 +1,21 @@
 const MongoClient = require("mongodb").MongoClient;
 
 let unit = module.exports = {
-    "get": async () => {
+    "get": async (guildId) => {
         const client = await MongoClient.connect(process.env.mongodbUrl);
         let db = client.db(process.env.mongodbBase);
 
         try {
             let collection = db.collection('playerswatch');
 
-            const result = await collection.find().toArray();
+            const result = await collection.find({ guildId: guildId }).toArray();
 
             return result;
         } finally {
             client.close();
         }
     },
-    "add": async (name, comment) => {
+    "add": async (guildId, name, comment) => {
         const client = await MongoClient.connect(process.env.mongodbUrl);
         let db = client.db(process.env.mongodbBase);
 
@@ -24,7 +24,7 @@ let unit = module.exports = {
 
             await collection.findOneAndUpdate(
                 { name: name },
-                { name: name, comment: comment },
+                { guildId: guildId, name: name, comment: comment },
                 { upsert: true }
             );
 
@@ -32,7 +32,7 @@ let unit = module.exports = {
             client.close();
         }
     },
-    "remove": async (name) => {
+    "remove": async (guildId, name) => {
         const client = await MongoClient.connect(process.env.mongodbUrl);
         let db = client.db(process.env.mongodbBase);
 
@@ -40,7 +40,7 @@ let unit = module.exports = {
             let collection = db.collection('playerswatch');
 
             let deleted = await collection.findOneAndDelete(
-                { name: name }
+                { guildId: guildId, name: name }
             );
 
             return deleted.value !== null;
