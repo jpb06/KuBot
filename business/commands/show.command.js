@@ -18,7 +18,6 @@ let unit = module.exports = {
 
                 let description = '';
                 watchedPlayers
-                    .sort((a, b) => a.name < b.name)
                     .forEach(player => {
                         description += '- **' + player.name + '**';
                         if (player.comment) description += ' - ' + player.comment;
@@ -31,7 +30,6 @@ let unit = module.exports = {
 
                 let description = '';
                 watchedFactions
-                    .sort((a, b) => a.name < b.name)
                     .forEach(faction => {
                         description += `- **${faction.name}** (${faction.identifier})\n`;
                         if (faction.alwaysDisplay) description += '\tAlways displayed\n';

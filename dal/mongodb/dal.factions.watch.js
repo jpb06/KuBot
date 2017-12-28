@@ -8,7 +8,10 @@ let unit = module.exports = {
         try {
             let collection = db.collection('factionswatch');
 
-            const result = await collection.find({ guildId: guildId }).toArray();
+            const result = await collection
+                .find({ guildId: guildId })
+                .sort({ name: 1 })
+                .toArray();
 
             return result;
         } finally {
