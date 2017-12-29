@@ -31,5 +31,17 @@ let unit = module.exports = {
         } finally {
             client.close();
         }
+    },
+    "addRange": async (regions) => {
+        const client = await MongoClient.connect(process.env.mongodbUrl);
+        let db = client.db(process.env.mongodbBase);
+
+        try {
+            let collection = db.collection('regionswatch');
+
+            await collection.insertMany(regions);
+        } finally {
+            client.close();
+        }
     }
 }
