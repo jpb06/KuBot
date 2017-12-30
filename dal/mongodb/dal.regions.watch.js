@@ -43,5 +43,17 @@ let unit = module.exports = {
         } finally {
             client.close();
         }
+    },
+    "removeForGuild": async (guildId) => {
+        const client = await MongoClient.connect(process.env.mongodbUrl);
+        let db = client.db(process.env.mongodbBase);
+
+        try {
+            let collection = db.collection('regionswatch');
+
+            await collection.deleteMany({ guildId: guildId });
+        } finally {
+            client.close();
+        }
     }
 }

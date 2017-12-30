@@ -49,15 +49,15 @@ let unit = module.exports = {
             let collection = db.collection('guilds');
 
             await collection.findOneAndUpdate(
-                { guildId: guildId },
+                { guildId: guildSettings.guildId },
                 {
                     guildId: guildSettings.guildId,
-                    messagesImage: messagesImage,
-                    messagesFooterName: messagesFooterName,
-                    scanMainRegionName: scanMainRegionName,
-                    mainChannel: mainChannel,
-                    adminChannel: adminChannel,
-                    acknowledged: acknowledged
+                    messagesImage: guildSettings.messagesImage,
+                    messagesFooterName: guildSettings.messagesFooterName,
+                    scanMainRegionName: guildSettings.scanMainRegionName,
+                    mainChannel: guildSettings.mainChannel,
+                    adminChannel: guildSettings.adminChannel,
+                    acknowledged: guildSettings.acknowledged
                 },
                 { upsert: true }
             );
