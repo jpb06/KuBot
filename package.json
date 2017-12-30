@@ -13,6 +13,7 @@
     "author": "jpb06",
     "license": "ISC",
     "dependencies": {
+        "bufferutil": "^3.0.3",
         "discord.js": "^11.2.1",
         "moment": "^2.20.1",
         "mongodb": "^3.0.0-rc0"
