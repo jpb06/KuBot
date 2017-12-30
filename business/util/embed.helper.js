@@ -143,6 +143,31 @@ let unit = module.exports = {
         });
     },
     /* ---------------------------------------------------------------------------------------------------------------
+      guild config file upload
+     ---------------------------------------------------------------------------------------------------------------*/
+    "sendInvalidGuildConfig": (channel, errors) => {
+        channel.send({
+            embed: new Discord.RichEmbed()
+                .setThumbnail('https://i.imgur.com/5L7T68j.png')
+                .setTimestamp(new Date())
+                .setFooter('kuBot', 'https://i.imgur.com/5L7T68j.png')
+                .setColor(10684167)
+                .setTitle('Invalid configuration file')
+                .setDescription(errors)
+        });
+    },
+    "sendGuildSettingsInitCompleted": (channel) => {
+        channel.send({
+            embed: new Discord.RichEmbed()
+                .setThumbnail('https://i.imgur.com/5L7T68j.png')
+                .setTimestamp(new Date())
+                .setFooter('kuBot', 'https://i.imgur.com/5L7T68j.png')
+                .setColor(3447003)
+                .setTitle('Settings importation completed')
+                .setDescription('kuBot settings for your guild have been validated and saved.')
+        });
+    },
+    /* ---------------------------------------------------------------------------------------------------------------
       remove admin command
      ---------------------------------------------------------------------------------------------------------------*/
     "sendRemoveResponse": (term, type) => {
