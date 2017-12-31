@@ -40,5 +40,29 @@ let unit = module.exports = {
         } finally {
             client.close();
         }
+    },
+    "set": async (guildSettings) => {
+        const client = await MongoClient.connect(process.env.mongodbUrl);
+        let db = client.db(process.env.mongodbBase);
+
+        try {
+            let collection = db.collection('guilds');
+
+            await collection.findOneAndUpdate(
+                { guildId: guildSettings.guildId },
+                {
+                    guildId: guildSettings.guildId,
+                    messagesImage: guildSettings.messagesImage,
+                    messagesFooterName: guildSettings.messagesFooterName,
+                    scanMainRegionName: guildSettings.scanMainRegionName,
+                    mainChannel: guildSettings.mainChannel,
+                    adminChannel: guildSettings.adminChannel,
+                    acknowledged: guildSettings.acknowledged
+                },
+                { upsert: true }
+            );
+        } finally {
+            client.close();
+        }
     }
 }

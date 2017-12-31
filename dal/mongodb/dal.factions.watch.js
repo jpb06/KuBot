@@ -35,6 +35,18 @@ let unit = module.exports = {
             client.close();
         }
     },
+    "addRange": async (factions) => {
+        const client = await MongoClient.connect(process.env.mongodbUrl);
+        let db = client.db(process.env.mongodbBase);
+
+        try {
+            let collection = db.collection('factionswatch');
+
+            await collection.insertMany(factions);
+        } finally {
+            client.close();
+        }
+    },
     "remove": async (guildId, identifier) => {
         const client = await MongoClient.connect(process.env.mongodbUrl);
         let db = client.db(process.env.mongodbBase);
@@ -48,6 +60,18 @@ let unit = module.exports = {
 
             return deleted.value !== null;
 
+        } finally {
+            client.close();
+        }
+    },
+    "removeForGuild": async (guildId) => {
+        const client = await MongoClient.connect(process.env.mongodbUrl);
+        let db = client.db(process.env.mongodbBase);
+
+        try {
+            let collection = db.collection('factionswatch');
+
+            await collection.deleteMany({ guildId: guildId });
         } finally {
             client.close();
         }

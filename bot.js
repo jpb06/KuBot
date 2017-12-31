@@ -12,6 +12,7 @@ const scanCommand = require('./business/commands/scan.command.js');
 const watchCommand = require('./business/commands/watch.command.js');
 const showCommand = require('./business/commands/show.command.js');
 const adminRemoveCommand = require('./business/commands/admin.remove.command.js');
+const guildConfigInitializer = require('./dal/initializer/guild.config.initializer.js');
 
 const dalGuilds = require('./dal/mongodb/dal.guilds.js');
 
@@ -61,61 +62,69 @@ client.on('guildDelete', guild => {
 client.on('message', async message => {
     if (message.author.bot) return; // not replying to others bots
     if (message.channel.type === 'dm') return; // direct messages should be ignored
-    if (!message.content.startsWith(botSettings.prefix)) return; // ignoring messages not starting with command prefix  
 
     let guildSettings = guildsParameters.find(guild => guild.guildId === message.guild.id);
 
-    let messageChunks = message.content.slice(botSettings.prefix.length).trim().split(/ +/g);
-    let command = messageChunks[0].toLowerCase();
+    if (message.content.startsWith(botSettings.prefix)) {
+        let messageChunks = message.content.slice(botSettings.prefix.length).trim().split(/ +/g);
+        let command = messageChunks[0].toLowerCase();
 
-    /* ------------------------------------------------------------------------------------------- 
-    Default + Admin */
-    if (message.channel.name === guildSettings.mainChannel ||
-        message.channel.name === guildSettings.adminChannel) {
         /* ------------------------------------------------------------------------------------------- 
-        help command | !help
-        ------------------------------------------------------------------------------------------- */
-        if (command === 'help') {
-            helpCommand.process(guildSettings, message);
+        Default + Admin */
+        if (message.channel.name === guildSettings.mainChannel ||
+            message.channel.name === guildSettings.adminChannel) {
+            /* ------------------------------------------------------------------------------------------- 
+            help command | !help
+            ------------------------------------------------------------------------------------------- */
+            if (command === 'help') {
+                helpCommand.process(guildSettings, message);
+            }
+            /* ------------------------------------------------------------------------------------------- 
+            scan command | !scan
+            ------------------------------------------------------------------------------------------- */
+            if (command === 'scan') {
+                await scanCommand.process(guildSettings, message, client);
+            }
+            /* ------------------------------------------------------------------------------------------- 
+            watch command | !watch <name> <comment>
+            ------------------------------------------------------------------------------------------- */
+            if (command === 'watch') {
+                let args = messageChunks.splice(1);
+                await watchCommand.process(guildSettings, args, message, client);
+            }
+            /* ------------------------------------------------------------------------------------------- 
+            show command | !show <term>
+            ------------------------------------------------------------------------------------------- */
+            if (command === 'show') {
+                let args = messageChunks.splice(1).join('');
+                await showCommand.process(guildSettings, args, message, client);
+            }
         }
-        /* ------------------------------------------------------------------------------------------- 
-        scan command | !scan
-        ------------------------------------------------------------------------------------------- */
-        if (command === 'scan') {
-            await scanCommand.process(guildSettings, message, client);
-        }
-        /* ------------------------------------------------------------------------------------------- 
-        watch command | !watch <name> <comment>
-        ------------------------------------------------------------------------------------------- */
-        if (command === 'watch') {
-            let args = messageChunks.splice(1);
-            await watchCommand.process(guildSettings, args, message, client);
-        }
-        /* ------------------------------------------------------------------------------------------- 
-        show command | !show <term>
-        ------------------------------------------------------------------------------------------- */
-        if (command === 'show') {
-            let args = messageChunks.splice(1).join('');
-            await showCommand.process(guildSettings, args, message, client);
-        }
-    }
 
-    /* ------------------------------------------------------------------------------------------- 
-    Admin */
-    if (message.channel.name === guildSettings.adminChannel) {
         /* ------------------------------------------------------------------------------------------- 
-        remove command | !remove <target> <term>
-        ------------------------------------------------------------------------------------------- */
-        if (command === 'remove') {
-            let args = messageChunks.splice(1);
-            await adminRemoveCommand.process(guildSettings, args, message, client);
+        Admin */
+        if (message.channel.name === guildSettings.adminChannel) {
+            /* ------------------------------------------------------------------------------------------- 
+            remove command | !remove <target> <term>
+            ------------------------------------------------------------------------------------------- */
+            if (command === 'remove') {
+                let args = messageChunks.splice(1);
+                await adminRemoveCommand.process(guildSettings, args, message, client);
+            }
+            /* ------------------------------------------------------------------------------------------- 
+            help command | !help
+            ------------------------------------------------------------------------------------------- */
+            if (command === 'help') {
+                helpCommand.processAdmin(guildSettings, message);
+            }
         }
+    } else if (message.channel.name === guildSettings.adminChannel && message.attachments.size === 1) {
         /* ------------------------------------------------------------------------------------------- 
-        help command | !help
-        ------------------------------------------------------------------------------------------- */
-        if (command === 'help') {
-            helpCommand.processAdmin(guildSettings, message);
-        }
+            Guild config json upload
+            ------------------------------------------------------------------------------------------- */
+        let persisted = await guildConfigInitializer.persist(message);
+        if (persisted)
+            guildsParameters = await dalGuilds.get();
     }
 });
 /* ----------------------------------------------------------------------------------------------- */
