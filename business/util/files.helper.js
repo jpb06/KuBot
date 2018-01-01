@@ -19,6 +19,14 @@ let unit = module.exports = {
             });
         });
     },
+    "append": (file, content) => {
+        return new Promise((resolve, reject) => {
+            fs.appendFile(file, content, function (err) {
+                if (err) reject(err);
+                resolve();
+            });
+        });
+    },
     "delete": (path) => {
         fs.unlink(path, function (err) {
             return new Promise((resolve, reject) => {
