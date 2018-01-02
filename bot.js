@@ -12,15 +12,21 @@ const scanCommand = require('./business/commands/scan.command.js');
 const watchCommand = require('./business/commands/watch.command.js');
 const showCommand = require('./business/commands/show.command.js');
 const adminRemoveCommand = require('./business/commands/admin.remove.command.js');
-const guildConfigInitializer = require('./dal/initializer/guild.config.initializer.js');
+const updateGuildConfigTask = require('./business/tasks/update.guild.config.task.js');
 
 const dalGuilds = require('./dal/mongodb/dal.guilds.js');
+
+const errorsLogging = require('./business/util/errors.logging.helper.js');
 
 let guildsParameters = [];
 
 let initialize = async () => {
-    guildsParameters = await dalGuilds.get();
-    console.log('Initializing...');
+    try {
+        guildsParameters = await dalGuilds.get();
+        console.log('Initializing...');
+    } catch (err) {
+        await errorsLogging.save(err);
+    }
 }
 initialize();
 
@@ -34,22 +40,26 @@ client.on('ready', async () => {
 });
 /* ----------------------------------------------------------------------------------------------- */
 client.on('guildCreate', async guild => {
-    // This event triggers when the bot joins a guild.
-    console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
+    try {
+        // This event triggers when the bot joins a guild.
+        console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
 
-    if (guildsParameters.filter(configuredGuild => configuredGuild.guildId === guild.id).length === 0) {
-        let defaultSettings = {
-            guildId: guild.id,
-            messagesImage: 'https://i.imgur.com/5L7T68j.png',
-            messagesFooterName: 'kuBot',
-            scanMainRegionName: 'Sirius Sector',
-            acknowledged: 'Understood!',
-            mainChannel: 'bots',
-            adminChannel: 'admin'
-        };
+        if (guildsParameters.filter(configuredGuild => configuredGuild.guildId === guild.id).length === 0) {
+            let defaultSettings = {
+                guildId: guild.id,
+                messagesImage: 'https://i.imgur.com/5L7T68j.png',
+                messagesFooterName: 'kuBot',
+                scanMainRegionName: 'Sirius Sector',
+                acknowledged: 'Understood!',
+                mainChannel: 'bots',
+                adminChannel: 'admin'
+            };
 
-        await dalGuilds.create(defaultSettings);
-        guildsParameters.push(defaultSettings);
+            await dalGuilds.create(defaultSettings);
+            guildsParameters.push(defaultSettings);
+        }
+    } catch (err) {
+        await errorsLogging.save(err);
     }
 });
 /* ----------------------------------------------------------------------------------------------- */
@@ -64,6 +74,7 @@ client.on('message', async message => {
     if (message.channel.type === 'dm') return; // direct messages should be ignored
 
     let guildSettings = guildsParameters.find(guild => guild.guildId === message.guild.id);
+    if (!guildSettings) return;
 
     if (message.content.startsWith(botSettings.prefix)) {
         let messageChunks = message.content.slice(botSettings.prefix.length).trim().split(/ +/g);
@@ -122,9 +133,7 @@ client.on('message', async message => {
         /* ------------------------------------------------------------------------------------------- 
             Guild config json upload
             ------------------------------------------------------------------------------------------- */
-        let persisted = await guildConfigInitializer.persist(message);
-        if (persisted)
-            guildsParameters = await dalGuilds.get();
+        await updateGuildConfigTask.start(message, guildSettings);
     }
 });
 /* ----------------------------------------------------------------------------------------------- */
