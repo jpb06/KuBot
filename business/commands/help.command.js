@@ -1,14 +1,25 @@
 const embedHelper = require('./../util/embed.helper.js');
+const errorsLogging = require('./../util/errors.logging.helper.js');
 
 let unit = module.exports = {
-    "process": (guildSettings, message) => {
-        embedHelper
-            .setup(message.channel, guildSettings)
-            .sendHelpResponse();
+    "process": async (guildSettings, message) => {
+        try {
+            embedHelper
+                .setup(message.channel, guildSettings)
+                .sendHelpResponse();
+        } catch (error) {
+            await errorsLogging.save(error);
+            embedHelper.error(message.channel);
+        }
     },
-    "processAdmin": (guildSettings, message) => {
-        embedHelper
-            .setup(message.channel, guildSettings)
-            .sendHelpAdminResponse();
+    "processAdmin": async (guildSettings, message) => {
+        try {
+            embedHelper
+                .setup(message.channel, guildSettings)
+                .sendHelpAdminResponse();
+        } catch (error) {
+            await errorsLogging.save(error);
+            embedHelper.error(message.channel);
+        }
     }
 }
