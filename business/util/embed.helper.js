@@ -53,6 +53,17 @@ let unit = module.exports = {
                 .addField('Errors', errors)
         });
     },
+    "error": (channel) => {
+        channel.send({
+            embed: new Discord.RichEmbed()
+                .setThumbnail('https://i.imgur.com/5L7T68j.png')
+                .setTimestamp(new Date())
+                .setFooter('kuBot', 'https://i.imgur.com/5L7T68j.png')
+                .setColor(10684167)
+                .setTitle('Error')
+                .setDescription('An error occurred while processing your request')
+        });
+    },
     /* ---------------------------------------------------------------------------------------------------------------
         Help command
        ---------------------------------------------------------------------------------------------------------------*/
