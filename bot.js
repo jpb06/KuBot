@@ -113,7 +113,7 @@ client.on('message', async message => {
         /* ------------------------------------------------------------------------------------------- 
             Guild config json upload
             ------------------------------------------------------------------------------------------- */
-        await updateGuildConfigTask.start(message, guildSettings);
+        guildsParameters = await updateGuildConfigTask.start(message, guildsParameters);
     }
 });
 /* ----------------------------------------------------------------------------------------------- */
