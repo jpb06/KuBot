@@ -1,9 +1,9 @@
 const util = require('util');
 const fs = require('fs');
 
-const embedHelper = require('./../../business/util/embed.helper.js');
-const validator = require('./document.validator.js');
-const filesHelper = require('./../../business/util/files.helper.js');
+const embedHelper = require('./../util/embed.helper.js');
+const filesHelper = require('./../util/files.helper.js');
+const validator = require('./../data/document.validator.js');
 
 const factionsDal = require('./../../dal/mongodb/dal.factions.watch.js');
 const regionsDal = require('./../../dal/mongodb/dal.regions.watch.js');
@@ -14,10 +14,10 @@ let unit = module.exports = {
         let attachment = message.attachments.first();
         let fileExtension = attachment.filename.substr(attachment.filename.lastIndexOf('.') + 1);
         if (fileExtension === 'json') {
-            await filesHelper.save(attachment.url, `./dal/initializer/guilds/${message.channel.guild.id}.json`);
+            await filesHelper.save(attachment.url, `./dal/guildsconfiguration/${message.channel.guild.id}.json`);
 
             const readFile = util.promisify(fs.readFile);
-            let data = await readFile(`./dal/initializer/guilds/${message.channel.guild.id}.json`, 'utf8');
+            let data = await readFile(`./dal/guildsconfiguration/${message.channel.guild.id}.json`, 'utf8');
             let parsed = JSON.parse(data);
 
             let validationErrors = validator.verifyGuildConfig(parsed);

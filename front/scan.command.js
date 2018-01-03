@@ -1,11 +1,11 @@
-const dalFactions = require('./../../dal/mongodb/dal.factions.watch.js');
-const dalRegions = require('./../../dal/mongodb/dal.regions.watch.js');
-const dalPlayers = require('./../../dal/mongodb/dal.players.watch.js');
+const dataFetchingTask = require('./../business/tasks/fetch.online.players.js');
+const watchTransformTask = require('./../business/tasks/watch.transform.js');
+const embedHelper = require('./../business/util/embed.helper.js');
+const errorsLogging = require('./../business/util/errors.logging.helper.js');
 
-const dataFetchingTask = require('./../tasks/fetch.online.players.task.js');
-const watchTransformTask = require('./../tasks/watch.transform.task.js');
-const embedHelper = require('./../util/embed.helper.js');
-const errorsLogging = require('./../util/errors.logging.helper.js');
+const dalFactions = require('./../dal/mongodb/dal.factions.watch.js');
+const dalRegions = require('./../dal/mongodb/dal.regions.watch.js');
+const dalPlayers = require('./../dal/mongodb/dal.players.watch.js');
 
 let unit = module.exports = {
     "process": async (guildSettings, message, client) => {

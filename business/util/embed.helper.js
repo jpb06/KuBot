@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const commandsDescriptions = require('./../commands/shared/commands.description.js');
+const commandsDescriptions = require('./../commands/commands.description.js');
 
 let unit = module.exports = {
     "setup": (channel, guildSettings, authorName, authorAvatarUrl) => {
