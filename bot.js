@@ -5,18 +5,18 @@ const client = new Discord.Client({
 
 require('./conf/private.settings.js').initialize();
 const botSettings = require('./conf/bot.settings.json');
+
+const helpCommand = require('./front/help.command.js');
+const scanCommand = require('./front/scan.command.js');
+const watchCommand = require('./front/watch.command.js');
+const showCommand = require('./front/show.command.js');
+const adminRemoveCommand = require('./front/admin.remove.command.js');
+const updateGuildConfigTask = require('./front/update.guild.config.task.js');
+const guildSubscriptionTask = require('./front/guild.subscription.task.js');
+const errorsLogging = require('./business/util/errors.logging.helper.js');
 const inviteLink = require('./business/util/invitelink.helper.js');
 
-const helpCommand = require('./business/commands/help.command.js');
-const scanCommand = require('./business/commands/scan.command.js');
-const watchCommand = require('./business/commands/watch.command.js');
-const showCommand = require('./business/commands/show.command.js');
-const adminRemoveCommand = require('./business/commands/admin.remove.command.js');
-const updateGuildConfigTask = require('./business/tasks/update.guild.config.task.js');
-
 const dalGuilds = require('./dal/mongodb/dal.guilds.js');
-
-const errorsLogging = require('./business/util/errors.logging.helper.js');
 
 let guildsParameters = [];
 
@@ -40,27 +40,7 @@ client.on('ready', async () => {
 });
 /* ----------------------------------------------------------------------------------------------- */
 client.on('guildCreate', async guild => {
-    try {
-        // This event triggers when the bot joins a guild.
-        console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
-
-        if (guildsParameters.filter(configuredGuild => configuredGuild.guildId === guild.id).length === 0) {
-            let defaultSettings = {
-                guildId: guild.id,
-                messagesImage: 'https://i.imgur.com/5L7T68j.png',
-                messagesFooterName: 'kuBot',
-                scanMainRegionName: 'Sirius Sector',
-                acknowledged: 'Understood!',
-                mainChannel: 'bots',
-                adminChannel: 'admin'
-            };
-
-            await dalGuilds.create(defaultSettings);
-            guildsParameters.push(defaultSettings);
-        }
-    } catch (err) {
-        await errorsLogging.save(err);
-    }
+    await guildSubscriptionTask.start(guild, guildsParameters);
 });
 /* ----------------------------------------------------------------------------------------------- */
 client.on('guildDelete', guild => {
