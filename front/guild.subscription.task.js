@@ -19,7 +19,7 @@ let unit = module.exports = {
 
                 await dalGuilds.create(defaultSettings);
                 guildsParameters.push(defaultSettings);
-                return;
+                return guildsParameters;
             }
         } catch (err) {
             await errorsLogging.save(err);

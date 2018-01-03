@@ -40,7 +40,7 @@ client.on('ready', async () => {
 });
 /* ----------------------------------------------------------------------------------------------- */
 client.on('guildCreate', async guild => {
-    await guildSubscriptionTask.start(guild, guildsParameters);
+    guildsParameters = await guildSubscriptionTask.start(guild, guildsParameters);
 });
 /* ----------------------------------------------------------------------------------------------- */
 client.on('guildDelete', guild => {
