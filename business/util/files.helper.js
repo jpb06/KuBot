@@ -21,10 +21,10 @@ let unit = module.exports = {
     },
     "append": (file, content) => {
         return new Promise((resolve, reject) => {
-            fs.appendFile(file, content, function (err) {
-                if (err) reject(err);
-                resolve();
-            });
+            let stream = fs.createWriteStream(file, { flags: 'a' });
+            stream.write(content);
+            stream.end();
+            resolve();
         });
     },
     "delete": (path) => {
