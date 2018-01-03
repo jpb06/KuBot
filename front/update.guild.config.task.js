@@ -1,9 +1,8 @@
+const embedHelper = require('./../business/util/embed.helper.js');
+const errorsLogging = require('./../business/util/errors.logging.helper.js');
+const guildConfigInitializer = require('./../business/tasks/guild.config.initializer.js');
 
-const embedHelper = require('./../util/embed.helper.js');
-const errorsLogging = require('./../util/errors.logging.helper.js');
-
-const guildConfigInitializer = require('./../../dal/initializer/guild.config.initializer.js');
-const dalGuilds = require('./../../dal/mongodb/dal.guilds.js');
+const dalGuilds = require('./../dal/mongodb/dal.guilds.js');
 
 let unit = module.exports = {
     "start": async (message, guildsParameters) => {

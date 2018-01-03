@@ -1,5 +1,5 @@
-const embedHelper = require('./../util/embed.helper.js');
-const errorsLogging = require('./../util/errors.logging.helper.js');
+const embedHelper = require('./../business/util/embed.helper.js');
+const errorsLogging = require('./../business/util/errors.logging.helper.js');
 
 let unit = module.exports = {
     "process": async (guildSettings, message) => {

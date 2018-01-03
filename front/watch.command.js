@@ -1,10 +1,10 @@
-const commandsDescriptions = require('./shared/commands.description.js');
-const argumentsValidation = require('./shared/arguments.validation.js');
-const embedHelper = require('./../util/embed.helper.js');
-const errorsLogging = require('./../util/errors.logging.helper.js');
+const commandsDescriptions = require('./../business/commands/commands.description.js');
+const argumentsValidation = require('./../business/commands/arguments.validation.js');
+const embedHelper = require('./../business/util/embed.helper.js');
+const errorsLogging = require('./../business/util/errors.logging.helper.js');
 
-const playersWatchDal = require('./../../dal/mongodb/dal.players.watch.js');
-const factionsWatchDal = require('./../../dal/mongodb/dal.factions.watch.js');
+const playersWatchDal = require('./../dal/mongodb/dal.players.watch.js');
+const factionsWatchDal = require('./../dal/mongodb/dal.factions.watch.js');
 
 let unit = module.exports = {
     "process": async (guildSettings, args, message, client) => {
