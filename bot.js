@@ -13,6 +13,9 @@ const showCommand = require('./front/show.command.js');
 const adminRemoveCommand = require('./front/admin.remove.command.js');
 const updateGuildConfigTask = require('./front/update.guild.config.task.js');
 const guildSubscriptionTask = require('./front/guild.subscription.task.js');
+const guildsMappingTask = require('./front/client.guilds.mapping.task.js');
+const factionsPresenceCheck = require('./front/cyclic.factions.presence.check.js');
+
 const errorsLogging = require('./business/util/errors.logging.helper.js');
 const inviteLink = require('./business/util/invitelink.helper.js');
 
@@ -35,6 +38,10 @@ client.on('ready', async () => {
     console.log(`I am ready! ${client.user.username} `);
 
     await client.user.setGame(`Kusari`);
+
+    let guildMappings = await guildsMappingTask.map(client, guildsParameters);
+
+    await factionsPresenceCheck.start(guildMappings);
 
     // inviteLink.generate(client);
 });
