@@ -199,4 +199,26 @@ let unit = module.exports = {
                 .setDescription(`${term} isn't defined in ${type} watch list`)
         });
     },
+    /* ---------------------------------------------------------------------------------------------------------------
+      Factions activity notice
+     ---------------------------------------------------------------------------------------------------------------*/
+    "generateActivityNotice": (channel, factions) => {
+        let embed = new Discord.RichEmbed()
+            .setThumbnail('https://i.imgur.com/5L7T68j.png')
+            .setTimestamp(new Date())
+            .setFooter('kuBot', 'https://i.imgur.com/5L7T68j.png')
+            .setColor(3447003)
+            .setDescription('An unusually high activity has been reported');
+
+        factions.forEach(faction => {
+            embed.addField(faction.name, `${faction.playersCount} players`);
+        });
+
+        return embed;
+    },
+    "sendActivityNotice": (channel, factions) => {
+        channel.send({
+            embed: unit.generateActivityNotice(channel, factions)
+        });
+    },
 }
