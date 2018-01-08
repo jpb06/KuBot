@@ -1,6 +1,22 @@
 const MongoClient = require("mongodb").MongoClient;
 
 let unit = module.exports = {
+    "getAll": async () => {
+        const client = await MongoClient.connect(process.env.mongodbUrl);
+        let db = client.db(process.env.mongodbBase);
+
+        try {
+            let collection = db.collection('factionswatch');
+
+            const result = await collection
+                .find()
+                .toArray();
+
+            return result;
+        } finally {
+            client.close();
+        }
+    },
     "get": async (guildId) => {
         const client = await MongoClient.connect(process.env.mongodbUrl);
         let db = client.db(process.env.mongodbBase);
