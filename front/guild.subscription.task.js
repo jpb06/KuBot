@@ -14,7 +14,8 @@ let unit = module.exports = {
                     scanMainRegionName: 'Sirius Sector',
                     acknowledged: 'Understood!',
                     mainChannel: 'bots',
-                    adminChannel: 'admin'
+                    adminChannel: 'admin',
+                    emergencyChannel: 'emergency'
                 };
 
                 await dalGuilds.create(defaultSettings);

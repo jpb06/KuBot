@@ -57,6 +57,7 @@ let unit = module.exports = {
                     scanMainRegionName: guildSettings.scanMainRegionName,
                     mainChannel: guildSettings.mainChannel,
                     adminChannel: guildSettings.adminChannel,
+                    emergencyChannel: guildSettings.emergencyChannel,
                     acknowledged: guildSettings.acknowledged
                 },
                 { upsert: true }
