@@ -156,6 +156,7 @@
         "scanMainRegionName": "House Liberty",
         "acknowledged": "Aye aye!",
         "mainChannel": "kubot",
-        "adminChannel": "kubotadmin"
+        "adminChannel": "kubotadmin",
+        "emergencyChannel": "kubot"
     }
 }
