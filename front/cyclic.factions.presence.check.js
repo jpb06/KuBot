@@ -32,13 +32,11 @@ let unit = module.exports = {
                     });
 
                     if (markedForEmergency.length > 0) {
-                        let messages = guild.emergencyChannel.fetchMessages({ limit: 1 });
+                        let messages = await guild.emergencyChannel.fetchMessages({ limit: 1 });
 
-                        if (messages.length > 0) {
-                            // kubot id = 385798675533660160
-
+                        if (messages.size > 0) {
                             let message = messages.first();
-                            if (message.author.id === '385798675533660160') {
+                            if (message.author.id === process.env.botId) {
                                 await message.edit(embedHelper.generateActivityNotice(guild.emergencyChannel, markedForEmergency));
                                 return;
                             }
