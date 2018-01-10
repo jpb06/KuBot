@@ -37,7 +37,8 @@ let unit = module.exports = {
                         if (messages.size > 0) {
                             let message = messages.first();
                             if (message.author.id === process.env.botId) {
-                                await message.edit(embedHelper.generateActivityNotice(guild.emergencyChannel, markedForEmergency));
+                                await message.delete();
+                                embedHelper.sendActivityNotice(guild.emergencyChannel, markedForEmergency);
                                 return;
                             }
                         }
