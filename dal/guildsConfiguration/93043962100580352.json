@@ -57,6 +57,14 @@
                 "[HA]"
             ],
             "alwaysDisplay": false
+        },
+        {
+            "identifier": "aoi",
+            "name": "Hanta Iseijin 113th",
+            "tags": [
+                "|Aoi"
+            ],
+            "alwaysDisplay": false
         }
     ],
     "regions": [
