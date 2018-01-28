@@ -1,11 +1,11 @@
 {
-    "factions": [
-        {
+    "factions": [{
             "identifier": "knf",
             "name": "Naval Forces",
             "tags": [
                 "[KNF]",
-                "KDS-"
+                "KDS-",
+                "Serpent-"
             ],
             "alwaysDisplay": true
         },
@@ -65,10 +65,17 @@
                 "|Aoi"
             ],
             "alwaysDisplay": false
+        },
+        {
+            "identifier": "corsairs",
+            "name": "Corsairs",
+            "tags": [
+                "C::"
+            ],
+            "alwaysDisplay": false
         }
     ],
-    "regions": [
-        {
+    "regions": [{
             "identifier": "kusari",
             "name": "Kusari",
             "systems": [
