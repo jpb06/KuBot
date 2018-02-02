@@ -1,6 +1,22 @@
 const MongoClient = require("mongodb").MongoClient;
 
 let unit = module.exports = {
+    "getAll": async () => {
+        const client = await MongoClient.connect(process.env.mongodbUrl);
+        let db = client.db(process.env.mongodbBase);
+
+        try {
+            let collection = db.collection('regionswatch');
+
+            const result = await collection
+                .find()
+                .toArray();
+
+            return result;
+        } finally {
+            client.close();
+        }
+    },
     "get": async (guildId) => {
         const client = await MongoClient.connect(process.env.mongodbUrl);
         let db = client.db(process.env.mongodbBase);
@@ -8,7 +24,9 @@ let unit = module.exports = {
         try {
             let collection = db.collection('regionswatch');
 
-            const result = await collection.find({ guildId: guildId }).toArray();
+            const result = await collection.find({
+                guildId: guildId
+            }).toArray();
 
             return result;
         } finally {
@@ -22,11 +40,17 @@ let unit = module.exports = {
         try {
             let collection = db.collection('regionswatch');
 
-            await collection.findOneAndUpdate(
-                { identifier: identifier },
-                { identifier: identifier, guildId: guildId, name: name, systems: systems, alwaysDisplay: alwaysDisplay },
-                { upsert: true }
-            );
+            await collection.findOneAndUpdate({
+                identifier: identifier
+            }, {
+                identifier: identifier,
+                guildId: guildId,
+                name: name,
+                systems: systems,
+                alwaysDisplay: alwaysDisplay
+            }, {
+                upsert: true
+            });
 
         } finally {
             client.close();
@@ -51,7 +75,9 @@ let unit = module.exports = {
         try {
             let collection = db.collection('regionswatch');
 
-            await collection.deleteMany({ guildId: guildId });
+            await collection.deleteMany({
+                guildId: guildId
+            });
         } finally {
             client.close();
         }
