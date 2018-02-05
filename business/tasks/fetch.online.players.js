@@ -20,7 +20,9 @@ let unit = module.exports = {
             let cleaned = '';
             let online = '';
             try {
-                cleaned = data.replace(/\\"/g, '"').replace(/\\\\\\\\/g, '\\\\');
+                cleaned = data.replace(/\\"/g, '"')
+                    .replace(/\\\\\\\\/g, '\\\\')
+                    .replace(/\\"/g, '\"');
                 online = JSON.parse(cleaned);
 
             } catch (err) {
