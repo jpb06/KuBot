@@ -43,7 +43,8 @@ client.on('ready', async () => {
 
     await factionsPresenceCheck.start(guildMappings);
 
-    // inviteLink.generate(client);
+    //inviteLink.generate(client);
+    // https://discordapp.com/oauth2/authorize?client_id=385798675533660160&permissions=8&scope=bot
 });
 /* ----------------------------------------------------------------------------------------------- */
 client.on('guildCreate', async guild => {
