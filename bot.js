@@ -37,7 +37,7 @@ initialize();
 client.on('ready', async () => {
     console.log(`I am ready! ${client.user.username} `);
 
-    await client.user.setGame(`Kusari`);
+    await client.user.setGame(`Sirius Sector`);
 
     let guildMappings = await guildsMappingTask.map(client, guildsParameters);
 
