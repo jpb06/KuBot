@@ -124,6 +124,14 @@
                 "Okinawa"
             ],
             "alwaysDisplay": false
+        },
+        {
+            "identifier": "uncharted",
+            "name": "Unknown space",
+            "systems": [
+                "Uncharted Kusari"
+            ],
+            "alwaysDisplay": false
         }
     ],
     "guildSettings": {
