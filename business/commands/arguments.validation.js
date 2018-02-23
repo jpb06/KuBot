@@ -20,10 +20,13 @@ let unit = module.exports = {
             }
         }
 
-        return { errors: errors, args: validatedArgs };
+        return {
+            errors: errors,
+            args: validatedArgs
+        };
     },
     "checkShowArgs": (parameter) => {
-        let expectedParameter = ['players', 'p', 'factions', 'f'];
+        let expectedParameter = ['players', 'p', 'factions', 'f', 'regions', 'r'];
 
         if (!parameter || parameter.length === 0)
             return 'Expecting one argument\n';
