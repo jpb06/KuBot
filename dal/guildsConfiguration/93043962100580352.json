@@ -14,7 +14,8 @@
             "name": "Blood Dragons",
             "tags": [
                 "BD|",
-                "n~}"
+                "n~}",
+                "KA|"
             ],
             "alwaysDisplay": false
         },
@@ -71,6 +72,14 @@
             "name": "Corsairs",
             "tags": [
                 "C::"
+            ],
+            "alwaysDisplay": false
+        },
+        {
+            "identifier": "defilers",
+            "name": "Defilers",
+            "tags": [
+                "Defiler."
             ],
             "alwaysDisplay": false
         }
