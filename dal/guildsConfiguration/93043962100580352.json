@@ -82,6 +82,14 @@
                 "Defiler."
             ],
             "alwaysDisplay": false
+        },
+        {
+            "identifier": "lanehackers",
+            "name": "Lane Hackers",
+            "tags": [
+                "LH~"
+            ],
+            "alwaysDisplay": false
         }
     ],
     "regions": [{
