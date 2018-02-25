@@ -90,6 +90,14 @@
                 "LH~"
             ],
             "alwaysDisplay": false
+        },
+        {
+            "identifier": "toyota",
+            "name": "Casa Loyola",
+            "tags": [
+                "Loyola"
+            ],
+            "alwaysDisplay": false
         }
     ],
     "regions": [{
