@@ -98,6 +98,22 @@
                 "Loyola"
             ],
             "alwaysDisplay": false
+        },
+        {
+            "identifier": "outcasts",
+            "name": "Outcasts",
+            "tags": [
+                "(C~"
+            ],
+            "alwaysDisplay": false
+        },
+        {
+            "identifier": "mercs",
+            "name": "Mercenaries",
+            "tags": [
+                "Forlorn|-"
+            ],
+            "alwaysDisplay": false
         }
     ],
     "regions": [{
