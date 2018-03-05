@@ -2,6 +2,7 @@ const schedule = require('node-schedule');
 
 const dalFactions = require('./../dal/mongodb/dal.factions.watch.js');
 const dalRegions = require('./../dal/mongodb/dal.regions.watch.js');
+const dalFactionsActivityCache = require('./../dal/mongodb/dal.activity.status.cache.js');
 const fetchOnlinePlayersTask = require('./../business/tasks/fetch.online.players.js');
 
 const embedHelper = require('./../business/util/embed.helper.js');
@@ -18,8 +19,16 @@ let unit = module.exports = {
                 let watchedFactions = await dalFactions.getAll();
                 let watchedRegions = await dalRegions.getAll();
 
+                let activityCache = await dalFactionsActivityCache.getAll();
+
                 guildMappings.forEach(async (guild) => {
-                    let guildWatchedFactions = watchedFactions.filter(faction => faction.guildId === guild.id);
+                    let guildWatchedFactions = watchedFactions
+                        .filter(faction => faction.guildId === guild.id)
+                        .sort((a, b) => {
+                            if (a.name < b.name) return -1;
+                            if (a.name > b.name) return 1;
+                            return 0;
+                        });
                     let guildWatchedRegions = watchedRegions.filter(region => region.guildId === guild.id);
                     let systems = [].concat(...guildWatchedRegions.map(region => region.systems));
 
@@ -38,7 +47,10 @@ let unit = module.exports = {
                         }
                     });
 
-                    if (markedForEmergency.length > 0) {
+                    let guildActivityCache = activityCache.filter(cache => cache.GuildId === guild.id)[0].Cache;
+                    let similar = unit.compare(filteredActivityCache, markedForEmergency);
+
+                    if (markedForEmergency.length > 0 && !similar) {
                         let messages = await guild.emergencyChannel.fetchMessages({
                             limit: 1
                         });
@@ -53,6 +65,8 @@ let unit = module.exports = {
                         }
 
                         embedHelper.sendActivityNotice(guild.emergencyChannel, markedForEmergency);
+
+                        await dalFactionsActivityCache.set(guild, markedForEmergency);
                         return;
                     }
                 });
@@ -60,5 +74,19 @@ let unit = module.exports = {
         } catch (error) {
             await errorsLogging.save(error);
         }
+    },
+    "compare": async (activityInCache, activityFetched) => {
+        if (activityInCache.length !== activityFetched.length) return false;
+
+        let index = 0;
+        activityInCache.forEach(cachedFaction => {
+            let fetchedFaction = activityFetched[index];
+
+            if (fetchedFaction.name !== cachedFaction.name || fetchedFaction.playersCount !== cachedFaction.playersCount) return false;
+
+            index++;
+        });
+
+        return true;
     }
 }
