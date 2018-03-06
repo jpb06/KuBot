@@ -2,11 +2,19 @@ const schedule = require('node-schedule');
 
 const dalFactions = require('./../dal/mongodb/dal.factions.watch.js');
 const dalRegions = require('./../dal/mongodb/dal.regions.watch.js');
+const dalFactionsActivityCache = require('./../dal/mongodb/dal.activity.status.cache.js');
+
 const fetchOnlinePlayersTask = require('./../business/tasks/fetch.online.players.js');
 
 const embedHelper = require('./../business/util/embed.helper.js');
+const errorsLogging = require('./../business/util/errors.logging.helper.js');
 
 let unit = module.exports = {
+    "asyncForEach": async (array, callback) => {
+        for (let index = 0; index < array.length; index++) {
+            await callback(array[index], index, array);
+        }
+    },
     "start": async (guildMappings) => {
         try {
             var rule = new schedule.RecurrenceRule();
@@ -18,8 +26,18 @@ let unit = module.exports = {
                 let watchedFactions = await dalFactions.getAll();
                 let watchedRegions = await dalRegions.getAll();
 
-                guildMappings.forEach(async (guild) => {
-                    let guildWatchedFactions = watchedFactions.filter(faction => faction.guildId === guild.id);
+                let activityCache = await dalFactionsActivityCache.getAll();
+
+                let updatedCache = [];
+
+                await unit.asyncForEach(guildMappings, async (guild) => {
+                    let guildWatchedFactions = watchedFactions
+                        .filter(faction => faction.guildId === guild.id)
+                        .sort((a, b) => {
+                            if (a.name < b.name) return -1;
+                            if (a.name > b.name) return 1;
+                            return 0;
+                        });
                     let guildWatchedRegions = watchedRegions.filter(region => region.guildId === guild.id);
                     let systems = [].concat(...guildWatchedRegions.map(region => region.systems));
 
@@ -30,7 +48,7 @@ let unit = module.exports = {
                             systems.includes(player.System)
                         );
 
-                        if (factionOnlinePlayers.length >= 3) {
+                        if (factionOnlinePlayers.length >= 2) {
                             markedForEmergency.push({
                                 name: faction.name,
                                 playersCount: factionOnlinePlayers.length
@@ -38,7 +56,14 @@ let unit = module.exports = {
                         }
                     });
 
-                    if (markedForEmergency.length > 0) {
+                    let guildActivityCache = activityCache.filter(cache => cache.GuildId === guild.id);
+
+                    let similar = false;
+                    if (guildActivityCache.length === 1)
+                        similar = await unit.compareActivity(guildActivityCache[0].Cache, markedForEmergency);
+
+                    if (markedForEmergency.length > 0 && !similar) {
+                        let messageSent = false;
                         let messages = await guild.emergencyChannel.fetchMessages({
                             limit: 1
                         });
@@ -48,17 +73,40 @@ let unit = module.exports = {
                             if (message.author.id === process.env.botId) {
                                 await message.delete();
                                 embedHelper.sendActivityNotice(guild.emergencyChannel, markedForEmergency);
-                                return;
+                                messageSent = true;
                             }
                         }
 
-                        embedHelper.sendActivityNotice(guild.emergencyChannel, markedForEmergency);
-                        return;
+                        if (!messageSent)
+                            embedHelper.sendActivityNotice(guild.emergencyChannel, markedForEmergency);
                     }
+
+                    updatedCache.push({
+                        GuildId: guild.id,
+                        Cache: markedForEmergency
+                    });
                 });
+
+                await dalFactionsActivityCache.set(updatedCache);
             });
         } catch (error) {
             await errorsLogging.save(error);
         }
+    },
+    "compareActivity": async (activityInCache, activityFetched) => {
+        if (activityInCache.length !== activityFetched.length) return false;
+
+        let index = 0;
+        activityInCache.forEach(cachedFaction => {
+            let fetchedFaction = activityFetched[index];
+
+            if (fetchedFaction.name !== cachedFaction.name ||
+                fetchedFaction.playersCount !== cachedFaction.playersCount)
+                return false;
+
+            index++;
+        });
+
+        return true;
     }
 }
