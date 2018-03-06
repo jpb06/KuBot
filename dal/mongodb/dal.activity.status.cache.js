@@ -35,21 +35,15 @@ let unit = module.exports = {
             client.close();
         }
     },
-    "set": async (guildId, activityCache) => {
+    "set": async (cache) => {
         const client = await MongoClient.connect(process.env.mongodbUrl);
         let db = client.db(process.env.mongodbBase);
 
         try {
             let collection = db.collection('activitystatuscache');
 
-            await collection.findOneAndUpdate({
-                GuildId: guildId
-            }, {
-                GuildId: guildId,
-                Cache: activityCache
-            }, {
-                upsert: true
-            });
+            await collection.deleteMany();
+            await collection.insertMany(cache, null);
         } finally {
             client.close();
         }
