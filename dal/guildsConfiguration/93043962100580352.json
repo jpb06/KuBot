@@ -181,7 +181,7 @@
         "scanMainRegionName": "House Kusari",
         "acknowledged": "Ryoukai!",
         "mainChannel": "bots",
-        "adminChannel": "admiralscircle",
+        "adminChannel": "admiralty",
         "emergencyChannel": "emergency"
     }
 }
