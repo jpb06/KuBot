@@ -71,8 +71,8 @@ let unit = module.exports = {
         unit.channel.send({
             embed: unit.commandsDescription(
                 unit.generateGeneric()
-                    .setTitle('KuBot is monitoring Sirius Sector for you!')
-                    .setDescription('I am doing my best to answer your requests. Please take a look at the following commands :')
+                .setTitle('KuBot is monitoring Sirius Sector for you!')
+                .setDescription('I am doing my best to answer your requests. Please take a look at the following commands :')
             )
         });
     },
@@ -80,7 +80,7 @@ let unit = module.exports = {
         unit.channel.send({
             embed: unit.commandsDescriptionAdmin(
                 unit.generateGeneric()
-                    .setTitle('Admin commands')
+                .setTitle('Admin commands')
             )
         });
     },
@@ -98,7 +98,7 @@ let unit = module.exports = {
             factionsDescription += `**${faction.name}** : ${faction.count}\n`;
         });
 
-        embed.addField('Factions', factionsDescription + '\n');
+        embed.addField('Factions', factionsDescription);
 
         regions.forEach(region => {
             let watch = '~';
