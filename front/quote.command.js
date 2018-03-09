@@ -58,8 +58,6 @@ let unit = module.exports = {
                 val: ['']
             }).val;
 
-            //console.log('content:', content);
-
             let errors = argumentsValidation.checkEmbedArgs(content);
 
             if (errors.length > 0) {
