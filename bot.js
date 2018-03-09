@@ -10,6 +10,7 @@ const helpCommand = require('./front/help.command.js');
 const scanCommand = require('./front/scan.command.js');
 const watchCommand = require('./front/watch.command.js');
 const showCommand = require('./front/show.command.js');
+const quoteCommand = require('./front/quote.command.js');
 const adminRemoveCommand = require('./front/admin.remove.command.js');
 const updateGuildConfigTask = require('./front/update.guild.config.task.js');
 const guildSubscriptionTask = require('./front/guild.subscription.task.js');
@@ -117,6 +118,36 @@ client.on('message', async message => {
                 helpCommand.processAdmin(guildSettings, message);
             }
         }
+
+        /* -------------------------------------------------------------------------------------------
+        Every channel 
+        quote command | !quote <identifier>
+        ------------------------------------------------------------------------------------------- */
+        if (command === 'quote' || command === 'q') {
+            let args = messageChunks.splice(1);
+            await quoteCommand.processMessage(guildSettings, args, message, client);
+            message.delete();
+        }
+        /* -------------------------------------------------------------------------------------------
+        Every channel 
+        quotetext command | !quotetext '<text>'
+        ------------------------------------------------------------------------------------------- */
+        if (command === 'quotetext' || command === 'qt') {
+            let text = messageChunks.splice(1).join(' ');
+            await quoteCommand.processText(guildSettings, text, message, client);
+            message.delete();
+        }
+        /* -------------------------------------------------------------------------------------------
+        Every channel 
+        embed command | !embed '<title>' '<text>'
+        ------------------------------------------------------------------------------------------- */
+        if (command === 'embed' || command === 'e') {
+            let args = messageChunks.splice(1).join(' ');
+
+            await quoteCommand.processEmbed(guildSettings, args, message, client);
+            message.delete();
+        }
+
     } else if (message.channel.name === guildSettings.adminChannel && message.attachments.size === 1) {
         /* ------------------------------------------------------------------------------------------- 
             Guild config json upload

@@ -34,6 +34,9 @@ let unit = module.exports = {
             .addField('!scan', 'Scans Sirius sector.\n')
             .addField('!watch', 'Adds a player to the watch list.\n')
             .addField('!show', 'Displays a watch list.\n')
+            .addField('!quote', 'Quotes one and only one message using its identifier.\n')
+            .addField('!quotetext', 'Quotes a text.\n')
+            .addField('!embed', 'Creates an embed using a title and a content message.\n');
 
         return embed;
     },
@@ -219,6 +222,58 @@ let unit = module.exports = {
     "sendActivityNotice": (channel, factions) => {
         channel.send({
             embed: unit.generateActivityNotice(channel, factions)
+        });
+    },
+    /* ---------------------------------------------------------------------------------------------------------------
+      Quote command
+     ---------------------------------------------------------------------------------------------------------------*/
+    "generateQuote": (channel, user,
+        quoteSendDate, quoteAuthor, quoteContent) => {
+        let embed = new Discord.RichEmbed()
+            .setTimestamp(quoteSendDate)
+            .setFooter(`Quote requested by ${user}`, 'https://i.imgur.com/5L7T68j.png')
+            .setColor(0x2e9c3f)
+            .addField(`${quoteAuthor} wrote:`, quoteContent);
+
+        return embed;
+    },
+    "sendQuote": (channel, user, quoteSendDate, quoteAuthor, quoteContent) => {
+        channel.send({
+            embed: unit.generateQuote(channel, user, quoteSendDate, quoteAuthor, quoteContent)
+        });
+    },
+    /* ---------------------------------------------------------------------------------------------------------------
+      QuoteText command
+     ---------------------------------------------------------------------------------------------------------------*/
+    "generateQuoteText": (channel, user, quoteContent) => {
+        let embed = new Discord.RichEmbed()
+            .setTimestamp(new Date())
+            .setFooter('kuBot', 'https://i.imgur.com/5L7T68j.png')
+            .setColor(0x2e9c3f)
+            .addField(`${user} is quoting this text:`, quoteContent);
+
+        return embed;
+    },
+    "sendQuoteText": (channel, user, quoteContent) => {
+        channel.send({
+            embed: unit.generateQuoteText(channel, user, quoteContent)
+        });
+    },
+    /* ---------------------------------------------------------------------------------------------------------------
+      Embed command
+     ---------------------------------------------------------------------------------------------------------------*/
+    "generateEmbed": (channel, user, title, content) => {
+        let embed = new Discord.RichEmbed()
+            .setTimestamp(new Date())
+            .setFooter(`${user}`, 'https://i.imgur.com/5L7T68j.png')
+            .setColor(0x2e9c3f)
+            .addField(title, content);
+
+        return embed;
+    },
+    "sendEmbed": (channel, user, title, content) => {
+        channel.send({
+            embed: unit.generateEmbed(channel, user, title, content)
         });
     },
 }
