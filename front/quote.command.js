@@ -45,21 +45,18 @@ let unit = module.exports = {
         try {
             embedHelper.setup(message.channel, guildSettings, client.user.username, client.user.avatarURL);
 
-            //console.log('args:', args);
-
-            let content = args.match(/\\?.|^$/g).reduce((accumulator, currentValue) => {
+            let content = args.split('').reduce((accumulator, currentValue) => {
                 if (currentValue === '"') {
                     accumulator.quote ^= 1;
                 } else if (!accumulator.quote && currentValue === ' ') {
-                    accumulator.a.push('');
+                    accumulator.val.push('');
                 } else {
-                    console.log(currentValue);
-                    accumulator.a[accumulator.a.length - 1] += currentValue.replace(/\\(.)/, "$1");
+                    accumulator.val[accumulator.val.length - 1] += currentValue.replace(/\\(.)/, "$1");
                 }
                 return accumulator;
             }, {
-                a: ['']
-            }).a;
+                val: ['']
+            }).val;
 
             //console.log('content:', content);
 
