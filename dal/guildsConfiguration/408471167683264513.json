@@ -1,6 +1,5 @@
 {
-    "factions": [
-        {
+    "factions": [{
             "identifier": "ApS",
             "name": "Apostatas",
             "tags": [
@@ -30,76 +29,45 @@
             "tags": [
                 "SCRA|"
             ],
-            "alwaysDisplay": true
+            "alwaysDisplay": false
         },
         {
-            "identifier": "order",
-            "name": "The Order",
+            "identifier": "GMG",
+            "name": "Gas Miner Guild",
             "tags": [
-                "Order|"
-            ],
-            "alwaysDisplay": true
-        },
-        {
-            "identifier": "hellfire",
-            "name": "Hellfire Legion",
-            "tags": [
-                "[HF]"
+                "GMG|",
+                "GMG-"
             ],
             "alwaysDisplay": false
         },
         {
-            "identifier": "ic",
-            "name": "Interspace Commerce",
+            "identifier": "BD",
+            "name": "Blood Dragons",
             "tags": [
-                "IC|"
+                "BD|"
             ],
             "alwaysDisplay": false
         },
         {
-            "identifier": "grn",
-            "name": "Gallic Royal Navy",
+            "identifier": "outcasts",
+            "name": "Outcasts",
             "tags": [
-                "MRG|",
-                "RNS-"
+                "(C~",
+                "MNS-"
             ],
             "alwaysDisplay": false
         },
         {
-            "identifier": "ageira",
-            "name": "Ageira Innovations",
+            "identifier": "knf",
+            "name": "Kusari Naval Forces",
             "tags": [
-                "Ageira~"
-            ],
-            "alwaysDisplay": false
-        },
-        {
-            "identifier": "lr",
-            "name": "Liberty Rogues",
-            "tags": [
-                "LR-"
-            ],
-            "alwaysDisplay": false
-        },
-        {
-            "identifier": "lpi",
-            "name": "Liberty Police Incorporated",
-            "tags": [
-                "LPI-"
-            ],
-            "alwaysDisplay": false
-        },
-        {
-            "identifier": "lsf",
-            "name": "Liberty Security Force",
-            "tags": [
-                "=LSF="
+                "[KNF]",
+                "KDS-"
             ],
             "alwaysDisplay": false
         }
     ],
-    "regions": [
-        {
+    "regions": [{
             "identifier": "corsair",
             "name": "Corsairs space",
             "systems": [
@@ -118,32 +86,15 @@
             "alwaysDisplay": true
         },
         {
-            "identifier": "kusariborder",
-            "name": "Kusari border",
+            "identifier": "home",
+            "name": "Home",
             "systems": [
-                "Sigma-21",
+                "Sigma-17",
+                "Sigma-19",
                 "Sigma-13",
-                "Sigma-19"
-            ],
-            "alwaysDisplay": true
-        },
-        {
-            "identifier": "bretoniaborder",
-            "name": "Bretonia Border",
-            "systems": [
-                "Omega-3",
-                "Omega-49"
-            ],
-            "alwaysDisplay": true
-        },
-        {
-            "identifier": "rheinlandborder",
-            "name": "Rheinland border",
-            "systems": [
-                "Bering",
-                "Dresden",
-                "Munich",
-                "Omega-11"
+                "Sigma-21",
+                "Omicron Theta",
+                "Omicron Sigma"
             ],
             "alwaysDisplay": true
         }
