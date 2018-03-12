@@ -97,6 +97,15 @@
                 "Omicron Sigma"
             ],
             "alwaysDisplay": true
+        },
+        {
+            "identifier": "Mining-cryos",
+            "name": "Cryo organisms business",
+            "systems": [
+                "Omicron Beta",
+                "Omicron Epsilon"
+            ],
+            "alwaysDisplay": false
         }
     ],
     "guildSettings": {
