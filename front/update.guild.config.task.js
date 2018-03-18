@@ -15,6 +15,7 @@ let unit = module.exports = {
         } catch (error) {
             await errorsLogging.save(error);
             embedHelper.error(message.channel);
+            return guildsParameters;
         }
     }
 }
