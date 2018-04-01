@@ -106,7 +106,8 @@
             "identifier": "outcasts",
             "name": "Outcasts",
             "tags": [
-                "(C~"
+                "(C~",
+                "MNS-"
             ],
             "alwaysDisplay": false
         },
